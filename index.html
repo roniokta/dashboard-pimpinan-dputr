@@ -8,21 +8,19 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Animate.css CDN -->
+    <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <!-- SheetJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.19.3/xlsx.full.min.js"></script>
 
     <style>
-      :root { --card-w: 220px; --card-h: 140px; }
-
       body { font-family: 'Poppins', sans-serif; }
 
-      /* Header bg */
+      /* Header */
       .header-bg {
         background: url("assets/kantor.png") no-repeat center center;
         background-size: cover;
@@ -32,60 +30,16 @@
       @media (min-width: 640px) { .header-bg { height: 250px; } }
       @media (min-width: 1024px) { .header-bg { height: 300px; } }
 
-      /* Table */
-      #data-table th {
-        text-align: center;
-        font-weight: 600;
-        white-space: nowrap;
-      }
-      #data-table tr:nth-child(even) { background-color: #f9fafb; }
-      #data-table tr:hover { background-color: #f1f5f9; transition: 0.18s; }
-
-      /* Card uniform size + clickable look */
-      .dashboard-card {
-        width: var(--card-w);
-        height: var(--card-h);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 0.8rem;
-        transition: transform 0.22s ease, box-shadow 0.22s ease;
-        cursor: pointer;
-        border-radius: 14px;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .dashboard-card .card-img { width: 72px; height: 72px; object-fit: contain; }
-      .dashboard-card .card-text { font-weight: 600; color: #374151; font-size: 0.95rem; }
-
-      .dashboard-card:hover {
-        transform: translateY(-6px) scale(1.03);
-        box-shadow: 0 10px 30px rgba(2,6,23,0.12);
-      }
-      .dashboard-card:active {
-        transform: translateY(-2px) scale(0.99);
-      }
-      .dashboard-card:focus {
-        outline: none;
-        box-shadow: 0 0 0 6px rgba(59,130,246,0.12);
-        transform: translateY(-6px) scale(1.03);
-      }
-
-      /* mobile: full width cards */
-      @media (max-width: 640px) {
-        .dashboard-card { width: 100%; height: auto; padding: 1rem; }
-        .dashboard-card .card-img { width: 56px; height: 56px; }
-      }
-
-      /* Percentage highlight classes (CSS, reliable regardless of Tailwind runtime) */
+      /* Table highlight */
       .pct-high { background-color: #dcfce7; color: #14532d; font-weight: 700; border-radius: 6px; padding: 0.18rem 0.5rem; display: inline-block; }
       .pct-medium { background-color: #fef3c7; color: #92400e; font-weight: 700; border-radius: 6px; padding: 0.18rem 0.5rem; display: inline-block; }
       .pct-low { background-color: #fee2e2; color: #7f1d1d; font-weight: 700; border-radius: 6px; padding: 0.18rem 0.5rem; display: inline-block; }
 
-      /* small extras */
-      .table-cell-nowrap { white-space: nowrap; }
+      /* Tabel responsif: hanya scroll di hp */
+      .table-wrapper { overflow-x: visible; }
+      @media (max-width: 768px) {
+        .table-wrapper { overflow-x: auto; }
+      }
     </style>
   </head>
 
@@ -99,19 +53,17 @@
       </h1>
     </div>
 
-    <!-- Table area -->
+    <!-- Table -->
     <div class="w-full max-w-[1500px] xl:max-w-[1600px] px-4 sm:px-6 mt-6 mb-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">📊 Rekap Kegiatan DPUPR</h2>
-        <div class="flex items-center gap-3">
-          <button id="btn-download"
-                  class="bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg shadow transition duration-300">
-            ⬇️ Download Excel
-          </button>
-        </div>
+        <button id="btn-download"
+                class="bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg shadow transition duration-300">
+          ⬇️ Download Excel
+        </button>
       </div>
 
-      <div class="overflow-x-auto shadow-lg rounded-2xl">
+      <div class="table-wrapper shadow-lg rounded-2xl">
         <table id="data-table" class="min-w-full table-auto text-sm sm:text-base text-left border-collapse rounded-2xl overflow-hidden bg-white">
           <thead class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
             <tr id="table-header"></tr>
@@ -122,64 +74,9 @@
       <p class="text-xs text-gray-600 text-center mt-2">⏳ Data otomatis diperbarui setiap 10 detik</p>
     </div>
 
-    <!-- Grid cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 px-4 sm:px-6 w-full max-w-[1500px] xl:max-w-[1600px] mb-10 justify-items-center">
-      <!-- NOTE: anchor tags used so keyboard users can tab; we add tabindex and role -->
-      <a href="https://script.google.com/macros/s/AKfycbwiqVEkhBbOTUknKyWkS9Ll-ie7K4zASAf335fjGfpnHjVNmBYjnn-DmUCu8rkrOguf/exec"
-         class="dashboard-card bg-white border-t-8 border-blue-500 animate__animated animate__fadeInUp delay-1"
-         role="button" tabindex="0" aria-label="Bidang Jalan">
-        <img src="https://img.icons8.com/color/80/road.png" alt="Bidang Jalan" class="card-img mb-2" />
-        <span class="card-text">BIDANG JALAN</span>
-      </a>
-
-      <a href="https://sites.google.com/view/aplikasi-sipedas-drainase/home"
-         class="dashboard-card bg-white border-t-8 border-green-500 animate__animated animate__fadeInUp delay-2"
-         role="button" tabindex="0" aria-label="Bidang Drainase">
-        <img src="https://img.icons8.com/color/80/water.png" alt="Bidang Drainase" class="card-img mb-2" />
-        <span class="card-text">BIDANG DRAINASE</span>
-      </a>
-
-      <a href="https://script.google.com/macros/s/AKfycbwCaveIR2hJD-ZezE62gI16l4wxv2jbQAsHgoK4qQbUzlHT_ChNxEzrvRteqvtebSoW/exec"
-         class="dashboard-card bg-white border-t-8 border-purple-500 animate__animated animate__fadeInUp delay-3"
-         role="button" tabindex="0" aria-label="Bidang Tata Ruang">
-        <img src="https://img.icons8.com/color/80/city-buildings.png" alt="Bidang Tata Ruang" class="card-img mb-2" />
-        <span class="card-text">BIDANG TATA RUANG</span>
-      </a>
-
-      <a href="https://docs.google.com/spreadsheets/d/1IbiAJ1jE2Q474rSdEAbcg5g0PHDrOF89p_9LBjSWtLE/edit?usp=sharing"
-         class="dashboard-card bg-white border-t-8 border-pink-500 animate__animated animate__fadeInUp delay-4"
-         role="button" tabindex="0" aria-label="Bidang Bangunan Gedung">
-        <img src="https://img.icons8.com/color/80/home.png" alt="Bidang Bangunan Gedung" class="card-img mb-2" />
-        <span class="card-text">BIDANG BANGUNAN GEDUNG</span>
-      </a>
-
-      <a href="https://docs.google.com/spreadsheets/d/1X5AxBjVM4Vd1Mplxkn730bVFA10NZ0_cFKCizBYpcFc/edit?usp=sharing"
-         class="dashboard-card bg-white border-t-8 border-yellow-500 animate__animated animate__fadeInUp delay-5"
-         role="button" tabindex="0" aria-label="Bidang SDA">
-        <img src="https://img.icons8.com/color/80/engineering.png" alt="Bidang SDA" class="card-img mb-2" />
-        <span class="card-text">BIDANG SDA</span>
-      </a>
-
-      <a href="https://docs.google.com/spreadsheets/d/1RQ7a5wG0hGZifH_CX0gWTGEMPPRWQO-gj6Ml7RRckzA/edit?usp=sharing"
-         class="dashboard-card bg-white border-t-8 border-red-500 animate__animated animate__fadeInUp delay-6"
-         role="button" tabindex="0" aria-label="Bidang Jasa Konstruksi">
-        <img src="https://img.icons8.com/color/80/crane.png" alt="Bidang Jasa Konstruksi" class="card-img mb-2" />
-        <span class="card-text">BIDANG JASA KONSTRUKSI</span>
-      </a>
-
-      <a href="https://script.google.com/macros/s/AKfycbzSWsFe_PfGbxui8i0ft-IIO2DvEmYMWSSN8eFZ3kE9FKXBVhvYdkWXOV_ZCknfq4Rm/exec"
-         class="dashboard-card bg-white border-t-8 border-green-600 animate__animated animate__fadeInUp delay-7"
-         role="button" tabindex="0" aria-label="HDPE">
-        <img src="https://img.icons8.com/color/80/recycling.png" alt="HDPE Recycling" class="card-img mb-2" />
-        <span class="card-text">HDPE</span>
-      </a>
-    </div>
-
-    <!-- Script: ambil CSV dari Google Sheets (publish to web) -->
+    <!-- Script -->
     <script>
-      // Ganti kalau perlu: URL publish CSV Google Sheets
       const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQfPFj1SxjErXTz4pwoIioVXnA90uqCEjPBDPhnNi6y9j5yPv59-LWTwNlCdg4mNtDgMkktWjt2mWM/pub?gid=0&single=true&output=csv";
-
       let exportDataAoA = [];
 
       function toNumber(val) {
@@ -187,13 +84,11 @@
         const n = String(val).replace(/[^\d.-]/g, "");
         return n ? Number(n) : NaN;
       }
-
       function formatRupiah(value) {
         const n = toNumber(value);
         if (isNaN(n)) return value;
         return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(n);
       }
-
       function formatPercent(value) {
         if (value === null || value === undefined) return "-";
         const s = String(value).trim();
@@ -208,34 +103,18 @@
         try {
           const res = await fetch(sheetUrl);
           const text = await res.text();
-
-          // Simple CSV -> rows (note: fields containing commas may break; keep as before)
           const rows = text.trim().split("\n").map(r => r.split(","));
           if (!rows || rows.length === 0) return;
 
-          let header = rows[0].map(h => h.trim());
+          const header = rows[0].map(h => h.trim());
           const bodyRows = rows.slice(1);
 
-          // Temukan kolom pagu & kontrak untuk buat computed column
-          const idxPagu = header.findIndex(h => h.toLowerCase().includes("pagu"));
-          const idxKontrakAll = header.map((h, i) => ({ h, i }))
-                                      .filter(({ h }) => h.toLowerCase().includes("nilai kontrak"))
-                                      .map(({ i }) => i);
-          const idxKontrak = idxKontrakAll.length ? idxKontrakAll[idxKontrakAll.length - 1] : -1;
-
-          // Tambah kolom computed jika belum ada
-          let idxPersenPagu = header.findIndex(h => h.toLowerCase().includes("persentase") && h.toLowerCase().includes("pagu"));
-          let addComputedColumn = false;
-          if (idxPersenPagu === -1) {
-            header.push("PERSENTASE TERHADAP PAGU");
-            idxPersenPagu = header.length - 1;
-            addComputedColumn = true;
-          }
-
-          // Render header
+          // header
           const headerRow = document.getElementById("table-header");
           const tbody = document.getElementById("table-body");
           headerRow.innerHTML = "";
+          tbody.innerHTML = "";
+
           header.forEach(h => {
             const th = document.createElement("th");
             th.className = "px-3 py-2 border text-xs sm:text-sm md:text-base min-w-[140px] md:min-w-[180px]";
@@ -243,80 +122,47 @@
             headerRow.appendChild(th);
           });
 
-          // Siapkan export array
           exportDataAoA = [ [...header] ];
-          tbody.innerHTML = "";
 
-          // Render setiap row
-          bodyRows.forEach((row) => {
-            const cells = addComputedColumn ? [...row, ""] : [...row];
-
-            // Hitung persentase terhadap pagu
-            if (idxPagu !== -1 && idxKontrak !== -1) {
-              const paguVal = toNumber(cells[idxPagu]);
-              const kontrakVal = toNumber(cells[idxKontrak]);
-              const percent = (isFinite(paguVal) && paguVal > 0 && isFinite(kontrakVal))
-                ? (kontrakVal / paguVal) * 100
-                : NaN;
-              cells[idxPersenPagu] = isFinite(percent) ? percent.toFixed(2) + "%" : "-";
-            }
-
+          // isi
+          bodyRows.forEach(row => {
             const tr = document.createElement("tr");
             const exportRow = [];
 
-            cells.forEach((cell, idx) => {
+            row.forEach((cell, idx) => {
               const hLower = (header[idx] || "").toLowerCase();
               const td = document.createElement("td");
               td.className = "px-3 py-2 border text-gray-700 align-middle";
 
-              // Priority: jika kolom mengandung kata "persentase" -> format percent & highlight
               if (hLower.includes("persentase")) {
                 const formatted = formatPercent(cell);
                 td.textContent = formatted;
-                td.classList.add("text-right", "table-cell-nowrap");
+                td.classList.add("text-right");
 
-                // cari nilai numeriknya (0..100)
                 let n = toNumber(cell);
-                let percentVal = NaN;
-                if (!isNaN(n)) {
-                  percentVal = (n <= 1) ? n * 100 : n;
-                } else {
-                  // coba ambil dari formatted (misal "12.34%")
-                  const numericPart = String(formatted).replace("%", "");
-                  const m = toNumber(numericPart);
-                  if (!isNaN(m)) percentVal = m;
-                }
+                let percentVal = (!isNaN(n)) ? (n <= 1 ? n * 100 : n) : NaN;
 
-                // tambahkan highlight
                 if (!isNaN(percentVal)) {
-                  if (percentVal > 80) {
-                    td.classList.add("pct-high");
-                  } else if (percentVal < 50) {
-                    td.classList.add("pct-low");
-                  } else {
-                    td.classList.add("pct-medium");
-                  }
+                  if (percentVal > 80) td.classList.add("pct-high");
+                  else if (percentVal < 50) td.classList.add("pct-low");
+                  else td.classList.add("pct-medium");
                 }
-
-                // export: nilai numeric 0..100
-                exportRow.push(isNaN(n) ? "" : (n <= 1 ? n * 100 : n));
+                exportRow.push(percentVal);
               }
-              // Rupiah-like columns
               else if (hLower.includes("pagu") || hLower.includes("nilai kontrak") || hLower.includes("anggaran")) {
                 td.textContent = formatRupiah(cell);
-                td.classList.add("text-right", "table-cell-nowrap");
+                td.classList.add("text-right");
                 exportRow.push(toNumber(cell));
               }
-              // numeric-ish columns
               else if (!isNaN(toNumber(cell)) && String(cell).trim() !== "") {
                 td.textContent = cell;
                 td.classList.add("text-right");
                 exportRow.push(toNumber(cell));
-              } else {
+              }
+              else {
                 td.textContent = cell;
                 exportRow.push(cell);
               }
-
               tr.appendChild(td);
             });
 
@@ -329,7 +175,7 @@
         }
       }
 
-      // Download Excel: gunakan Blob dari XLSX.write(..., type: 'array') untuk keandalan
+      // Download Excel langsung dengan XLSX.writeFile
       function downloadExcel() {
         if (!exportDataAoA || exportDataAoA.length === 0) {
           alert("Belum ada data untuk di-download.");
@@ -337,31 +183,18 @@
         }
         try {
           const ws = XLSX.utils.aoa_to_sheet(exportDataAoA);
-          const wb = { Sheets: { 'Data': ws }, SheetNames: ['Data'] };
-          const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-          const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = "Rekap_DPUPR.xlsx";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "Data");
+          XLSX.writeFile(wb, "Rekap_DPUPR.xlsx");
         } catch (err) {
           console.error("Gagal membuat file Excel:", err);
           alert("Gagal membuat file Excel. Cek console untuk detail.");
         }
       }
 
-      // Setup
       document.getElementById("btn-download").addEventListener("click", downloadExcel);
-
-      // First load + auto refresh
       loadTableData();
       setInterval(loadTableData, 10000);
     </script>
-
   </body>
 </html>
