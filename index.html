@@ -31,30 +31,26 @@
         height: 200px;
         position: relative;
       }
-
       @media (min-width: 640px) { .header-bg { height: 250px; } }
       @media (min-width: 1024px) { .header-bg { height: 300px; } }
-
-      /* Grid responsif */
-      @media (max-width: 640px) {
-        .card-text { font-size: 0.9rem; }
-        .card-img { width: 56px; height: 56px; }
-      }
 
       /* ✅ Tabel lebih cantik */
       #data-table th {
         text-align: center;
         font-weight: 600;
+        white-space: nowrap;
       }
-      #data-table tr:nth-child(even) {
-        background-color: #f9fafb;
-      }
-      #data-table tr:hover {
-        background-color: #f1f5f9;
-        transition: 0.2s;
+      #data-table tr:nth-child(even) { background-color: #f9fafb; }
+      #data-table tr:hover { background-color: #f1f5f9; transition: 0.2s; }
+
+      /* Grid responsif kartu */
+      @media (max-width: 640px) {
+        .card-text { font-size: 0.9rem; }
+        .card-img { width: 56px; height: 56px; }
       }
     </style>
   </head>
+
   <body class="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 min-h-screen flex flex-col items-center justify-start font-[Poppins]">
 
     <!-- ✅ Header dengan background + overlay -->
@@ -66,16 +62,17 @@
     </div>
 
     <!-- ✅ Tabel dari Google Sheets -->
-    <div class="w-full max-w-6xl px-4 sm:px-6 mt-6 mb-10">
+    <div class="w-full max-w-[1500px] xl:max-w-[1600px] px-4 sm:px-6 mt-6 mb-10">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">📊 Rekap Kegiatan DPUPR</h2>
-        <button onclick="downloadExcel()" 
+        <button onclick="downloadExcel()"
                 class="bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg shadow transition duration-300">
           ⬇️ Download Excel
         </button>
       </div>
+
       <div class="overflow-x-auto shadow-lg rounded-2xl">
-        <table id="data-table" class="min-w-full text-sm sm:text-base text-left border-collapse rounded-2xl overflow-hidden">
+        <table id="data-table" class="min-w-full table-auto text-sm sm:text-base text-left border-collapse rounded-2xl overflow-hidden">
           <thead class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
             <tr id="table-header"></tr>
           </thead>
@@ -85,8 +82,8 @@
       <p class="text-xs text-gray-600 text-center mt-2">⏳ Data otomatis diperbarui setiap 10 detik</p>
     </div>
 
-    <!-- ✅ Container Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6 w-full max-w-6xl mb-10">
+    <!-- Container Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6 w-full max-w-[1500px] xl:max-w-[1600px] mb-10">
 
       <!-- BIDANG JALAN -->
       <a href="https://script.google.com/macros/s/AKfycbwiqVEkhBbOTUknKyWkS9Ll-ie7K4zASAf335fjGfpnHjVNmBYjnn-DmUCu8rkrOguf/exec" 
@@ -142,51 +139,131 @@
     <!-- ✅ Ambil Data Google Sheets (CSV) -->
     <script>
       const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQfPFj1SxjErXTz4pwoIioVXnA90uqCEjPBDPhnNi6y9j5yPv59-LWTwNlCdg4mNtDgMkktWjt2mWM/pub?gid=0&single=true&output=csv";
-      let currentData = []; // simpan data untuk download Excel
 
-      // Fungsi format ke Rupiah
+      // Menyimpan data untuk export (sudah terformat + kolom persentase)
+      let exportDataAoA = [];
+
+      // Helper: ubah string ke number aman (hapus non-digit kecuali . -)
+      function toNumber(val) {
+        if (val === null || val === undefined) return NaN;
+        const n = String(val).replace(/[^\d.-]/g, "");
+        return n ? Number(n) : NaN;
+      }
+
+      // Format Rupiah
       function formatRupiah(value) {
-        if (!value || isNaN(value)) return value;
-        return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(value);
+        const n = toNumber(value);
+        if (isNaN(n)) return value;
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency", currency: "IDR", minimumFractionDigits: 0
+        }).format(n);
+      }
+
+      // Format Persentase (menerima 0..1 atau 0..100 atau string "%")
+      function formatPercent(value) {
+        if (value === null || value === undefined) return "-";
+        const s = String(value).trim();
+        if (s.endsWith("%")) return s;
+        let n = toNumber(s);
+        if (isNaN(n)) return value;
+        if (n <= 1) n = n * 100;
+        return n.toFixed(2) + "%";
       }
 
       async function loadTableData() {
         try {
           const res = await fetch(sheetUrl);
           const text = await res.text();
-          const rows = text.trim().split("\n").map(r => r.split(","));
-          currentData = rows; // simpan untuk download
 
+          // Parsing CSV sederhana
+          const rows = text.trim().split("\n").map(r => r.split(","));
+          let header = rows[0].map(h => h.trim());
+          const bodyRows = rows.slice(1);
+
+          // Cari indeks kolom penting
+          const idxPagu = header.findIndex(h => h.toLowerCase().includes("pagu"));
+          const idxKontrakAll = header
+            .map((h, i) => ({ h, i }))
+            .filter(({ h }) => h.toLowerCase().includes("nilai kontrak"))
+            .map(({ i }) => i);
+          const idxKontrak = idxKontrakAll.length ? idxKontrakAll[idxKontrakAll.length - 1] : -1;
+
+          // Siapkan kolom "Persentase terhadap Pagu"
+          let idxPersenPagu = header.findIndex(h => h.toLowerCase().includes("persentase") && h.toLowerCase().includes("pagu"));
+          let addComputedColumn = false;
+          if (idxPersenPagu === -1) {
+            header.push("PERSENTASE TERHADAP PAGU");
+            idxPersenPagu = header.length - 1;
+            addComputedColumn = true;
+          }
+
+          // Render header
           const headerRow = document.getElementById("table-header");
           const tbody = document.getElementById("table-body");
-
-          // Buat header
           headerRow.innerHTML = "";
-          rows[0].forEach(h => {
+          header.forEach(h => {
             const th = document.createElement("th");
-            th.className = "px-3 py-2 border text-xs sm:text-sm md:text-base";
+            th.className = "px-3 py-2 border text-xs sm:text-sm md:text-base min-w-[140px] md:min-w-[180px]";
             th.textContent = h;
             headerRow.appendChild(th);
           });
 
-          // Buat body
+          // Siapkan data untuk export
+          exportDataAoA = [ [...header] ];
+
+          // Render body
           tbody.innerHTML = "";
-          rows.slice(1).forEach(row => {
+          bodyRows.forEach((row) => {
+            // Pastikan panjang row mengikuti header (kalau ada kolom tambahan)
+            const cells = addComputedColumn ? [...row, ""] : [...row];
+
+            // Hitung persentase terhadap pagu jika memungkinkan
+            if (idxPagu !== -1 && idxKontrak !== -1) {
+              const paguVal = toNumber(cells[idxPagu]);
+              const kontrakVal = toNumber(cells[idxKontrak]);
+              const percent = (isFinite(paguVal) && paguVal > 0 && isFinite(kontrakVal))
+                ? (kontrakVal / paguVal) * 100
+                : NaN;
+
+              // Isi/override kolom persen pagu
+              cells[idxPersenPagu] = isFinite(percent) ? percent.toFixed(2) + "%" : "-";
+            }
+
+            // Simpan versi export + Render tampilan
             const tr = document.createElement("tr");
-            row.forEach((cell, idx) => {
+            const exportRow = [];
+
+            cells.forEach((cell, idx) => {
+              const hLower = header[idx].toLowerCase();
               const td = document.createElement("td");
               td.className = "px-3 py-2 border text-gray-700";
 
-              // Cek apakah ini kolom uang (misal "Pagu" atau ada angka besar)
-              if (rows[0][idx].toLowerCase().includes("pagu") || !isNaN(cell) && cell.length > 4) {
-                td.textContent = formatRupiah(Number(cell));
+              // Penentuan format & alignment
+              if (hLower.includes("pagu") || hLower.includes("nilai kontrak") || hLower.includes("anggaran")) {
+                td.textContent = formatRupiah(cell);
+                td.classList.add("text-right", "whitespace-nowrap");
+                exportRow.push(toNumber(cell)); // export: angka mentah agar mudah diolah
+              } else if (hLower.includes("persentase")) {
+                td.textContent = formatPercent(cell);
+                td.classList.add("text-right", "whitespace-nowrap");
+                // export: simpan tanpa % sebagai angka 0..100
+                const n = toNumber(cell);
+                exportRow.push(isNaN(n) ? "" : (n <= 1 ? n * 100 : n));
+              } else if (!isNaN(toNumber(cell)) && cell !== "") {
+                // angka umum → rata kanan
+                td.textContent = cell;
+                td.classList.add("text-right");
+                exportRow.push(toNumber(cell));
               } else {
                 td.textContent = cell;
+                exportRow.push(cell);
               }
 
               tr.appendChild(td);
             });
+
             tbody.appendChild(tr);
+            exportDataAoA.push(exportRow);
           });
 
         } catch (err) {
@@ -194,18 +271,17 @@
         }
       }
 
-      // ✅ Download ke Excel
+      // ✅ Download ke Excel (pakai data yang ditampilkan, termasuk kolom persentase hasil hitung)
       function downloadExcel() {
-        if (!currentData || currentData.length === 0) return;
-        const ws = XLSX.utils.aoa_to_sheet(currentData);
+        if (!exportDataAoA || exportDataAoA.length === 0) return;
+        const ws = XLSX.utils.aoa_to_sheet(exportDataAoA);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Data");
         XLSX.writeFile(wb, "Rekap_DPUPR.xlsx");
       }
 
-      // Load pertama kali
+      // Load pertama kali & auto refresh
       loadTableData();
-      // Auto refresh tiap 10 detik
       setInterval(loadTableData, 10000);
     </script>
 
