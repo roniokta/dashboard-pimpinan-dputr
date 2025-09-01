@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard PUTR Kab. Bandung</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Animate.css CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+      /* Animasi delay */
+      .delay-1 { animation-delay: 0.2s; }
+      .delay-2 { animation-delay: 0.4s; }
+      .delay-3 { animation-delay: 0.6s; }
+      .delay-4 { animation-delay: 0.8s; }
+      .delay-5 { animation-delay: 1s; }
+      .delay-6 { animation-delay: 1.2s; }
+      .delay-7 { animation-delay: 1.4s; }
+
+      /* ✅ Header dengan background kantor.png */
+      .header-bg {
+        background: url("assets/kantor.png") no-repeat center center;
+        background-size: cover;
+        height: 200px;
+        position: relative;
+      }
+
+      @media (min-width: 640px) { .header-bg { height: 250px; } }
+      @media (min-width: 1024px) { .header-bg { height: 300px; } }
+
+      /* Grid responsif */
+      @media (max-width: 640px) {
+        .card-text { font-size: 0.9rem; }
+        .card-img { width: 56px; height: 56px; }
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 min-h-screen flex flex-col items-center justify-start font-[Poppins]">
+
+    <!-- ✅ Header dengan background + overlay -->
+    <div class="header-bg w-full flex items-center justify-center relative">
+      <div class="absolute inset-0 bg-black/50"></div>
+      <h1 class="relative text-xl sm:text-2xl md:text-4xl font-extrabold text-white drop-shadow-lg px-4 text-center leading-snug animate__animated animate__fadeInDown">
+        DINAS PEKERJAAN UMUM DAN TATA RUANG <br class="hidden md:block"> KABUPATEN BANDUNG
+      </h1>
+    </div>
+
+    <!-- ✅ Tabel dari Google Sheets -->
+    <div class="w-full max-w-6xl px-4 sm:px-6 mt-6 mb-10">
+      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-4 text-center">📊 Rekap Kegiatan DPUPR</h2>
+      <div class="overflow-x-auto shadow-lg rounded-2xl">
+        <table id="data-table" class="min-w-full text-sm sm:text-base text-left border-collapse">
+          <thead class="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+            <tr id="table-header"></tr>
+          </thead>
+          <tbody id="table-body" class="bg-white"></tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-500 text-center mt-2">⏳ Data otomatis diperbarui setiap 10 detik</p>
+    </div>
+
+    <!-- Container Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6 w-full max-w-6xl mb-10">
+
+      <!-- BIDANG JALAN -->
+      <a href="https://script.google.com/macros/s/AKfycbwiqVEkhBbOTUknKyWkS9Ll-ie7K4zASAf335fjGfpnHjVNmBYjnn-DmUCu8rkrOguf/exec" 
+         class="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center hover:scale-105 transition duration-300 ease-in-out border-t-8 border-blue-500 animate__animated animate__fadeInUp delay-1">
+        <img src="https://img.icons8.com/color/80/road.png" alt="Bidang Jalan" class="mb-2 sm:mb-3 card-img">
+        <span class="card-text text-center font-semibold text-gray-700">BIDANG JALAN</span>
+      </a>
+
+      <!-- BIDANG DRAINASE -->
+      <a href="https://sites.google.com/view/aplikasi-sipedas-drainase/home" 
+         class="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center hover:scale-105 transition duration-300 ease-in-out border-t-8 border-green-500 animate__animated animate__fadeInUp delay-2">
+        <img src="https://img.icons8.com/color/80/water.png" alt="Bidang Drainase" class="mb-2 sm:mb-3 card-img">
+        <span class="card-text text-center font-semibold text-gray-700">BIDANG DRAINASE</span>
+      </a>
+
+      <!-- BIDANG TATA RUANG -->
+      <a href="https://script.google.com/macros/s/AKfycbwCaveIR2hJD-ZezE62gI16l4wxv2jbQAsHgoK4qQbUzlHT_ChNxEzrvRteqvtebSoW/exec" 
+         class="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center hover:scale-105 transition duration-300 ease-in-out border-t-8 border-purple-500 animate__animated animate__fadeInUp delay-3">
+        <img src="https://img.icons8.com/color/80/city-buildings.png" alt="Bidang Tata Ruang" class="mb-2 sm:mb-3 card-img">
+        <span class="card-text text-center font-semibold text-gray-700">BIDANG TATA RUANG</span>
+      </a>
+
+      <!-- BIDANG BANGUNAN GEDUNG -->
+      <a href="https://docs.google.com/spreadsheets/d/1IbiAJ1jE2Q474rSdEAbcg5g0PHDrOF89p_9LBjSWtLE/edit?usp=sharing" 
+         class="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center hover:scale-105 transition duration-300 ease-in-out border-t-8 border-pink-500 animate__animated animate__fadeInUp delay-4">
+        <img src="https://img.icons8.com/color/80/home.png" alt="Bidang Bangunan Gedung" class="mb-2 sm:mb-3 card-img">
+        <span class="card-text text-center font-semibold text-gray-700">BIDANG BANGUNAN GEDUNG</span>
+      </a>
+
+      <!-- BIDANG SDA -->
+      <a href="https://docs.google.com/spreadsheets/d/1X5AxBjVM4Vd1Mplxkn730bVFA10NZ0_cFKCizBYpcFc/edit?usp=sharing" 
+         class="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center hover:scale-105 transition duration-300 ease-in-out border-t-8 border-yellow-500 animate__animated animate__fadeInUp delay-5">
+        <img src="https://img.icons8.com/color/80/engineering.png" alt="Bidang SDA" class="mb-2 sm:mb-3 card-img">
+        <span class="card-text text-center font-semibold text-gray-700">BIDANG SDA</span>
+      </a>
+
+      <!-- BIDANG JASA KONSTRUKSI -->
+      <a href="https://docs.google.com/spreadsheets/d/1RQ7a5wG0hGZifH_CX0gWTGEMPPRWQO-gj6Ml7RRckzA/edit?usp=sharing" 
+         class="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center hover:scale-105 transition duration-300 ease-in-out border-t-8 border-red-500 animate__animated animate__fadeInUp delay-6">
+        <img src="https://img.icons8.com/color/80/crane.png" alt="Bidang Jasa Konstruksi" class="mb-2 sm:mb-3 card-img">
+        <span class="card-text text-center font-semibold text-gray-700">BIDANG JASA KONSTRUKSI</span>
+      </a>
+
+      <!-- DASHBOARD HDPE -->
+      <a href="https://script.google.com/macros/s/AKfycbzSWsFe_PfGbxui8i0ft-IIO2DvEmYMWSSN8eFZ3kE9FKXBVhvYdkWXOV_ZCknfq4Rm/exec" 
+         class="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center hover:scale-105 transition duration-300 ease-in-out border-t-8 border-green-600 animate__animated animate__fadeInUp delay-7">
+        <img src="https://img.icons8.com/color/80/recycling.png" alt="HDPE Recycling" class="mb-2 sm:mb-3 card-img">
+        <span class="card-text text-center font-semibold text-gray-700">HDPE</span>
+      </a>
+
+    </div>
+
+    <!-- ✅ Ambil Data Google Sheets (CSV) -->
+    <script>
+      const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQfPFj1SxjErXTz4pwoIioVXnA90uqCEjPBDPhnNi6y9j5yPv59-LWTwNlCdg4mNtDgMkktWjt2mWM/pub?gid=0&single=true&output=csv";
+
+      async function loadTableData() {
+        try {
+          const res = await fetch(sheetUrl);
+          const text = await res.text();
+          const rows = text.trim().split("\n").map(r => r.split(","));
+
+          const headerRow = document.getElementById("table-header");
+          const tbody = document.getElementById("table-body");
+
+          // Buat header
+          headerRow.innerHTML = "";
+          rows[0].forEach(h => {
+            const th = document.createElement("th");
+            th.className = "px-3 py-2 border text-xs sm:text-sm md:text-base";
+            th.textContent = h;
+            headerRow.appendChild(th);
+          });
+
+          // Buat body
+          tbody.innerHTML = "";
+          rows.slice(1).forEach(row => {
+            const tr = document.createElement("tr");
+            row.forEach(cell => {
+              const td = document.createElement("td");
+              td.className = "px-3 py-2 border";
+              td.textContent = cell;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+
+        } catch (err) {
+          console.error("Gagal memuat data:", err);
+        }
+      }
+
+      // Load pertama kali
+      loadTableData();
+      // Auto refresh tiap 10 detik
+      setInterval(loadTableData, 10000);
+    </script>
+
+  </body>
+</html>
