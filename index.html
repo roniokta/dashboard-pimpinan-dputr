@@ -11,6 +11,9 @@
     <!-- Animate.css CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
+    <!-- ✅ SheetJS untuk download Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.19.3/xlsx.full.min.js"></script>
+
     <style>
       /* Animasi delay */
       .delay-1 { animation-delay: 0.2s; }
@@ -37,6 +40,19 @@
         .card-text { font-size: 0.9rem; }
         .card-img { width: 56px; height: 56px; }
       }
+
+      /* ✅ Tabel lebih cantik */
+      #data-table th {
+        text-align: center;
+        font-weight: 600;
+      }
+      #data-table tr:nth-child(even) {
+        background-color: #f9fafb;
+      }
+      #data-table tr:hover {
+        background-color: #f1f5f9;
+        transition: 0.2s;
+      }
     </style>
   </head>
   <body class="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 min-h-screen flex flex-col items-center justify-start font-[Poppins]">
@@ -51,19 +67,25 @@
 
     <!-- ✅ Tabel dari Google Sheets -->
     <div class="w-full max-w-6xl px-4 sm:px-6 mt-6 mb-10">
-      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-4 text-center">📊 Rekap Kegiatan DPUPR</h2>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">📊 Rekap Kegiatan DPUPR</h2>
+        <button onclick="downloadExcel()" 
+                class="bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg shadow transition duration-300">
+          ⬇️ Download Excel
+        </button>
+      </div>
       <div class="overflow-x-auto shadow-lg rounded-2xl">
-        <table id="data-table" class="min-w-full text-sm sm:text-base text-left border-collapse">
-          <thead class="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+        <table id="data-table" class="min-w-full text-sm sm:text-base text-left border-collapse rounded-2xl overflow-hidden">
+          <thead class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
             <tr id="table-header"></tr>
           </thead>
           <tbody id="table-body" class="bg-white"></tbody>
         </table>
       </div>
-      <p class="text-xs text-gray-500 text-center mt-2">⏳ Data otomatis diperbarui setiap 10 detik</p>
+      <p class="text-xs text-gray-600 text-center mt-2">⏳ Data otomatis diperbarui setiap 10 detik</p>
     </div>
 
-    <!-- Container Grid -->
+    <!-- ✅ Container Grid -->
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6 w-full max-w-6xl mb-10">
 
       <!-- BIDANG JALAN -->
@@ -120,12 +142,20 @@
     <!-- ✅ Ambil Data Google Sheets (CSV) -->
     <script>
       const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQfPFj1SxjErXTz4pwoIioVXnA90uqCEjPBDPhnNi6y9j5yPv59-LWTwNlCdg4mNtDgMkktWjt2mWM/pub?gid=0&single=true&output=csv";
+      let currentData = []; // simpan data untuk download Excel
+
+      // Fungsi format ke Rupiah
+      function formatRupiah(value) {
+        if (!value || isNaN(value)) return value;
+        return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(value);
+      }
 
       async function loadTableData() {
         try {
           const res = await fetch(sheetUrl);
           const text = await res.text();
           const rows = text.trim().split("\n").map(r => r.split(","));
+          currentData = rows; // simpan untuk download
 
           const headerRow = document.getElementById("table-header");
           const tbody = document.getElementById("table-body");
@@ -143,10 +173,17 @@
           tbody.innerHTML = "";
           rows.slice(1).forEach(row => {
             const tr = document.createElement("tr");
-            row.forEach(cell => {
+            row.forEach((cell, idx) => {
               const td = document.createElement("td");
-              td.className = "px-3 py-2 border";
-              td.textContent = cell;
+              td.className = "px-3 py-2 border text-gray-700";
+
+              // Cek apakah ini kolom uang (misal "Pagu" atau ada angka besar)
+              if (rows[0][idx].toLowerCase().includes("pagu") || !isNaN(cell) && cell.length > 4) {
+                td.textContent = formatRupiah(Number(cell));
+              } else {
+                td.textContent = cell;
+              }
+
               tr.appendChild(td);
             });
             tbody.appendChild(tr);
@@ -155,6 +192,15 @@
         } catch (err) {
           console.error("Gagal memuat data:", err);
         }
+      }
+
+      // ✅ Download ke Excel
+      function downloadExcel() {
+        if (!currentData || currentData.length === 0) return;
+        const ws = XLSX.utils.aoa_to_sheet(currentData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Data");
+        XLSX.writeFile(wb, "Rekap_DPUPR.xlsx");
       }
 
       // Load pertama kali
