@@ -14,9 +14,6 @@
     <!-- Animate.css CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
-    <!-- Bootstrap Icons CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
     <style>
       :root { --card-w: 240px; --card-h: 160px; }
 
@@ -190,17 +187,16 @@
         <span class="card-text">HDPE</span>
       </a>
 
-      <!-- Modifikasi: tambahkan ikon dokumen -->
-      <a href="https://sites.google.com/view/data-disposisi-permohonan-krk/home"
-         class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="Permohonan KRK">
-        <i class="bi bi-file-earmark-text card-img text-blue-600 text-6xl"></i>
+      <a href="https://docs.google.com/spreadsheets/d/1sV2wIlvyALqO_96lzgoO5u8Dvh8abGrTGILy3x7q688/edit?gid=1665319666#gid=1665319666"
+         class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="HDPE">
+
         <span class="card-text">PERMOHONAN KRK, PMP UMK, DAN PERMOHONAN RENCANA TAPAK</span>
       </a>
     </div>
 
     <!-- Script: ambil CSV dari Google Sheets (publish to web) -->
     <script>
-      const sheetUrl = "https://sites.google.com/view/data-disposisi-permohonan-krk/home";
+      const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQfPFj1SxjErXTz4pwoIioVXnA90uqCEjPBDPhnNi6y9j5yPv59-LWTwNlCdg4mNtDgMkktWjt2mWM/pub?gid=0&single=true&output=csv";
 
       function toNumber(val) {
         if (val === null || val === undefined) return NaN;
@@ -325,3 +321,7 @@
 
   </body>
 </html>
+
+
+
+
