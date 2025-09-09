@@ -24,13 +24,13 @@
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      overflow-x: hidden; /* cegah scroll horizontal */
+      overflow-x: hidden;
     }
 
     /* Header fullscreen */
     .header-bg {
       background: linear-gradient(135deg, #2563eb, #9333ea);
-      height: 100vh; /* full screen */
+      height: 100vh;
       position: relative;
       overflow: hidden;
       display: flex;
@@ -38,7 +38,7 @@
       justify-content: center;
     }
 
-    /* Wave animasi */
+    /* Wave animasi bawah */
     .wave {
       position: absolute;
       bottom: -1px;
@@ -49,10 +49,34 @@
       background-size: 50% 120px;
       animation: waveMove 8s linear infinite;
       opacity: 0.9;
+      z-index: 5;
     }
     @keyframes waveMove {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
+    }
+
+    /* Efek air jatuh */
+    .rain {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.15) 0px,
+        rgba(255, 255, 255, 0.05) 2px,
+        transparent 4px
+      );
+      background-size: 100px 200px;
+      animation: rainAnim 4s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes rainAnim {
+      0% { background-position: 0 -200px; }
+      100% { background-position: 0 200px; }
     }
 
     /* Table */
@@ -151,7 +175,8 @@
 
   <!-- Header Fullscreen -->
   <div class="header-bg w-full relative">
-    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="absolute inset-0 bg-black/30 z-0"></div>
+    <div class="rain"></div> <!-- efek air jatuh -->
 
     <div class="relative flex flex-col lg:flex-row items-center justify-center gap-6 px-6 text-center lg:text-left z-10">
       <!-- Foto + Nama -->
@@ -197,9 +222,9 @@
     <p class="text-xs text-gray-600 text-center mt-2">⏳ Data otomatis diperbarui setiap 10 detik</p>
   </div>
 
-
   <!-- Grid cards -->
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 px-4 sm:px-6 w-full max-w-[1500px] xl:max-w-[1600px] mb-10 justify-items-center">
+    <!-- semua card tetap sama -->
     <a href="https://script.google.com/macros/s/AKfycbwiqVEkhBbOTUknKyWkS9Ll-ie7K4zASAf335fjGfpnHjVNmBYjnn-DmUCu8rkrOguf/exec" class="dashboard-card animate__animated animate__fadeInUp delay-1" aria-label="Bidang Jalan">
       <img src="https://img.icons8.com/color/80/road.png" alt="Bidang Jalan" class="card-img mb-2" />
       <span class="card-text">BIDANG JALAN</span>
@@ -360,6 +385,7 @@
 
   </body>
 </html>
+
 
 
 
