@@ -27,15 +27,15 @@
     /* Header bg (gradasi, tanpa gambar) */
     .header-bg {
       background: linear-gradient(135deg, #2563eb, #9333ea);
-      height: 280px;
+      height: 200px;
       position: relative;
       overflow: hidden;
     }
     @media (min-width: 640px) {
-      .header-bg { height: 320px; }
+      .header-bg { height: 250px; }
     }
     @media (min-width: 1024px) {
-      .header-bg { height: 360px; }
+      .header-bg { height: 300px; }
     }
 
     /* Wave animasi */
@@ -53,15 +53,6 @@
     @keyframes waveMove {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
-    }
-
-    /* Animasi floating */
-    .floaty {
-      animation: floatyAnim 4s ease-in-out infinite;
-    }
-    @keyframes floatyAnim {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
     }
 
     /* Table */
@@ -159,19 +150,15 @@
 <body class="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 min-h-screen flex flex-col items-center justify-start">
 
   <!-- Header -->
-  <div class="header-bg w-full flex flex-col sm:flex-row items-center justify-center relative">
+  <div class="header-bg w-full flex items-center justify-center relative">
     <div class="absolute inset-0 bg-black/30"></div>
 
-    <div class="relative flex flex-col sm:flex-row items-center gap-4 px-6 floaty">
+    <div class="relative flex items-center gap-4 px-6">
       <!-- Foto Kepala Dinas -->
-      <div class="flex flex-col items-center">
-        <img src="assets/kepala-dinas.jpg" alt="Kepala Dinas" class="w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border-4 border-white shadow-lg object-cover animate__animated animate__fadeInLeft"/>
-        <h2 class="text-white font-bold text-lg sm:text-xl md:text-2xl mt-2 underline">Dr. Ir. H. Zeis Zultaqawa, M.M,. IPU.ASEAN, ASEAN ENG.</h2>
-        <p class="text-white font-medium text-base sm:text-lg">Kepala Dinas</p>
-      </div>
+      <img src="assets/kepala-dinas.jpg" alt="Kepala Dinas" class="w-20 h-20 sm:w-28 sm:h-28 rounded-full border-4 border-white shadow-lg object-cover animate__animated animate__fadeInLeft"/>
 
       <!-- Judul -->
-      <h1 class="text-xl sm:text-2xl md:text-4xl font-extrabold text-white drop-shadow-lg text-center leading-snug animate__animated animate__fadeInDown mt-4 sm:mt-0 sm:ml-6">
+      <h1 class="text-xl sm:text-2xl md:text-4xl font-extrabold text-white drop-shadow-lg text-center leading-snug animate__animated animate__fadeInDown">
         DASHBOARD PROGRES KEGIATAN <br class="hidden md:block"> DPUTR KABUPATEN BANDUNG
       </h1>
     </div>
@@ -201,10 +188,38 @@
 
   <!-- Grid cards -->
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 px-4 sm:px-6 w-full max-w-[1500px] xl:max-w-[1600px] mb-10 justify-items-center">
-    <!-- isi cards tetap sama -->
-    ...
+    <a href="https://script.google.com/macros/s/AKfycbwiqVEkhBbOTUknKyWkS9Ll-ie7K4zASAf335fjGfpnHjVNmBYjnn-DmUCu8rkrOguf/exec" class="dashboard-card animate__animated animate__fadeInUp delay-1" aria-label="Bidang Jalan">
+      <img src="https://img.icons8.com/color/80/road.png" alt="Bidang Jalan" class="card-img mb-2" />
+      <span class="card-text">BIDANG JALAN</span>
+    </a>
+    <a href="https://sites.google.com/view/aplikasi-sipedas-drainase/home/progres-kegiatan-fisik-drainase?authuser=0" class="dashboard-card animate__animated animate__fadeInUp delay-2" aria-label="Bidang Drainase">
+      <img src="https://img.icons8.com/color/80/water.png" alt="Bidang Drainase" class="card-img mb-2" />
+      <span class="card-text">BIDANG DRAINASE</span>
+    </a>
+    <a href="https://script.google.com/macros/s/AKfycbwCaveIR2hJD-ZezE62gI16l4wxv2jbQAsHgoK4qQbUzlHT_ChNxEzrvRteqvtebSoW/exec" class="dashboard-card animate__animated animate__fadeInUp delay-3" aria-label="Bidang Tata Ruang">
+      <img src="https://img.icons8.com/color/80/city-buildings.png" alt="Bidang Tata Ruang" class="card-img mb-2" />
+      <span class="card-text">BIDANG TATA RUANG</span>
+    </a>
+    <a href="https://script.google.com/macros/s/AKfycbyLvqwWRbcLRhY779sLF__itpGvRPccZm0fuoATZ8h6S-Xmc0clFU7LGXNvKneRJEiY/exec" class="dashboard-card animate__animated animate__fadeInUp delay-4" aria-label="Bidang Bangunan Gedung">
+      <img src="https://img.icons8.com/color/80/home.png" alt="Bidang Bangunan Gedung" class="card-img mb-2" />
+      <span class="card-text">BIDANG BANGUNAN GEDUNG</span>
+    </a>
+    <a href="https://script.google.com/macros/s/AKfycbzVFY-cneJj16RyxiOQNyi7r3QIV19bH3QuZcI9cuXllGcGpqqnK7L08_PYT1EiGMCq/exec" class="dashboard-card animate__animated animate__fadeInUp delay-5" aria-label="Bidang SDA">
+      <img src="https://img.icons8.com/color/80/engineering.png" alt="Bidang SDA" class="card-img mb-2" />
+      <span class="card-text">BIDANG SDA</span>
+    </a>
+    <a href="https://script.google.com/macros/s/AKfycbyI7UHIsvIn-fVyBHikFf7E4umikjtLKzqWocEe2zGVRSmouR6JixvNCthCccd-Svm95g/exec" class="dashboard-card animate__animated animate__fadeInUp delay-6" aria-label="Bidang Jasa Konstruksi">
+      <img src="https://img.icons8.com/color/80/crane.png" alt="Bidang Jasa Konstruksi" class="card-img mb-2" />
+      <span class="card-text">BIDANG JASA KONSTRUKSI</span>
+    </a>
+    <a href="https://sites.google.com/view/jual-sampah/home/monitoring-pengumpulan-hdpe?authuser=0" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="HDPE">
+      <img src="https://img.icons8.com/color/80/recycling.png" alt="HDPE Recycling" class="card-img mb-2" />
+      <span class="card-text">HDPE</span>
+    </a>
+    <a href="https://sites.google.com/view/data-disposisi-permohonan-krk/home" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="KRK">
+      <span class="card-text">PERMOHONAN KRK, PMP UMK, DAN PERMOHONAN RENCANA TAPAK</span>
+    </a>
   </div>
-
 
     <!-- Script: ambil CSV dari Google Sheets (publish to web) -->
     <script>
@@ -333,8 +348,6 @@
 
   </body>
 </html>
-
-
 
 
 
