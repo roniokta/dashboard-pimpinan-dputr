@@ -56,28 +56,24 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* Efek air jatuh */
-    .rain {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 200%;
-      height: 100%;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.15) 0px,
-        rgba(255, 255, 255, 0.05) 2px,
-        transparent 4px
-      );
-      background-size: 100px 200px;
-      animation: rainAnim 4s linear infinite;
-      pointer-events: none;
-      z-index: 2;
-    }
-    @keyframes rainAnim {
-      0% { background-position: 0 -200px; }
-      100% { background-position: 0 200px; }
-    }
+   /* Efek tetesan hujan */
+.raindrop {
+  position: absolute;
+  top: -100px;
+  width: 2px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 1px;
+  animation: fall linear infinite;
+  z-index: 3;
+}
+@keyframes fall {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(110vh); opacity: 0; }
+}
+
 
     /* Table */
     #data-table th {
@@ -176,7 +172,8 @@
   <!-- Header Fullscreen -->
   <div class="header-bg w-full relative">
     <div class="absolute inset-0 bg-black/30 z-0"></div>
-    <div class="rain"></div> <!-- efek air jatuh -->
+    <div id="rain-container"></div>
+ <!-- efek air hujan -->
 
     <div class="relative flex flex-col lg:flex-row items-center justify-center gap-6 px-6 text-center lg:text-left z-10">
       <!-- Foto + Nama -->
@@ -382,9 +379,29 @@
       loadTableData();
       setInterval(loadTableData, 10000);
     </script>
+  <script>
+  // Buat efek hujan di header
+  const rainContainer = document.getElementById("rain-container");
+
+  function createRaindrop() {
+    const drop = document.createElement("div");
+    drop.className = "raindrop";
+    drop.style.left = Math.random() * window.innerWidth + "px";
+    drop.style.animationDuration = (1 + Math.random() * 1.5) + "s";
+    drop.style.opacity = Math.random() * 0.7 + 0.3;
+    rainContainer.appendChild(drop);
+
+    setTimeout(() => drop.remove(), 2500);
+  }
+
+  // setiap 120ms muncul tetesan baru
+  setInterval(createRaindrop, 120);
+</script>
+
 
   </body>
 </html>
+
 
 
 
