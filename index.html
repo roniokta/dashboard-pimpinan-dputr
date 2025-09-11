@@ -200,24 +200,14 @@
     <div class="wave"></div>
   </div>
 
-  <!-- Table area -->
+  <!-- 🔥 Dashboard Progress Cards (gantikan tabel lama) -->
   <div class="w-full max-w-[1500px] xl:max-w-[1600px] px-4 sm:px-6 mt-6 mb-6">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">
-        📊 Rekap dan Progres Kegiatan DPUTR TA 2025
-      </h2>
-    </div>
-
-    <div class="overflow-x-auto shadow-lg rounded-2xl">
-      <table id="data-table" class="min-w-full table-auto text-sm sm:text-base text-left border-collapse rounded-2xl overflow-hidden bg-white">
-        <thead class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-          <tr id="table-header"></tr>
-        </thead>
-        <tbody id="table-body" class="bg-white"></tbody>
-      </table>
-    </div>
-    <p class="text-xs text-gray-600 text-center mt-2">⏳ Data otomatis diperbarui setiap 10 detik</p>
+    <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">
+      📊 Rekap dan Progres Kegiatan DPUTR TA 2025
+    </h2>
+    <div id="dashboard" class="space-y-10"></div>
   </div>
+
 
   <!-- Grid cards -->
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 px-4 sm:px-6 w-full max-w-[1500px] xl:max-w-[1600px] mb-10 justify-items-center">
@@ -411,10 +401,96 @@
   // setiap 120ms muncul tetesan baru
   setInterval(createRaindrop, 1520);
 </script>
+  <!-- Script Dashboard Progress -->
+  <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1875135079&single=true&output=csv";
+
+    async function fetchData() {
+      const res = await fetch(csvUrl);
+      const text = await res.text();
+      const rows = text.trim().split("\n").map(r => r.split(","));
+      const data = rows.slice(1);
+      renderDashboard(data);
+    }
+
+    function renderDashboard(data) {
+      const container = document.getElementById("dashboard");
+      container.innerHTML = "";
+      data.forEach(row => {
+        const unit = row[0];
+        if (!unit) return;
+        const jumlah = parseInt(row[1]) || 0;
+        const pagu = parseFloat(row[2]) || 0;
+        const persiapan = parseInt(row[3]) || 0;
+        const nilaiPersiapan = parseFloat(row[4]) || 0;
+        const berkontrak = parseInt(row[5]) || 0;
+        const nilaiBerkontrak = parseFloat(row[6]) || 0;
+        const selesai = parseInt(row[7]) || 0;
+        const nilaiSelesai = parseFloat(row[8]) || 0;
+        if (jumlah === 0 && pagu === 0) return;
+
+        // Persentase
+        const persiapanPct = ((persiapan / jumlah) * 100).toFixed(1);
+        const berkontrakPct = ((berkontrak / jumlah) * 100).toFixed(1);
+        const selesaiPct = ((selesai / jumlah) * 100).toFixed(1);
+        const paguPersiapanPct = ((nilaiPersiapan / pagu) * 100).toFixed(1);
+        const paguBerkontrakPct = ((nilaiBerkontrak / pagu) * 100).toFixed(1);
+        const paguSelesaiPct = ((nilaiSelesai / pagu) * 100).toFixed(1);
+
+        const card = document.createElement("div");
+        card.className = "bg-white shadow-lg rounded-xl p-6";
+        card.innerHTML = `
+          <h2 class="text-2xl font-bold text-indigo-600 mb-6">${unit}</h2>
+          <div class="grid grid-cols-3 items-center gap-4 text-center">
+            <div class="p-4 rounded-lg border bg-indigo-50">
+              <h3 class="font-semibold text-lg">Persiapan</h3>
+              <p class="text-xl font-bold text-indigo-700">${persiapan}</p>
+              <p class="text-gray-600">(${persiapanPct}% paket)</p>
+              <p class="text-sm text-gray-500 mb-2">${formatRupiah(nilaiPersiapan)} (${paguPersiapanPct}% pagu)</p>
+              <div class="space-y-1">
+                <div class="progress-bar"><div class="progress-inner bg-indigo-500" style="width:${persiapanPct}%"></div></div>
+                <div class="progress-bar"><div class="progress-inner bg-pink-400" style="width:${paguPersiapanPct}%"></div></div>
+              </div>
+            </div>
+            <i class="fa-solid fa-arrow-right arrow"></i>
+            <div class="p-4 rounded-lg border bg-green-50">
+              <h3 class="font-semibold text-lg">Berkontrak</h3>
+              <p class="text-xl font-bold text-green-700">${berkontrak}</p>
+              <p class="text-gray-600">(${berkontrakPct}% paket)</p>
+              <p class="text-sm text-gray-500 mb-2">${formatRupiah(nilaiBerkontrak)} (${paguBerkontrakPct}% pagu)</p>
+              <div class="space-y-1">
+                <div class="progress-bar"><div class="progress-inner bg-green-500" style="width:${berkontrakPct}%"></div></div>
+                <div class="progress-bar"><div class="progress-inner bg-pink-400" style="width:${paguBerkontrakPct}%"></div></div>
+              </div>
+            </div>
+            <i class="fa-solid fa-arrow-right arrow"></i>
+            <div class="p-4 rounded-lg border bg-blue-50">
+              <h3 class="font-semibold text-lg">Selesai</h3>
+              <p class="text-xl font-bold text-blue-700">${selesai}</p>
+              <p class="text-gray-600">(${selesaiPct}% paket)</p>
+              <p class="text-sm text-gray-500 mb-2">${formatRupiah(nilaiSelesai)} (${paguSelesaiPct}% pagu)</p>
+              <div class="space-y-1">
+                <div class="progress-bar"><div class="progress-inner bg-blue-500" style="width:${selesaiPct}%"></div></div>
+                <div class="progress-bar"><div class="progress-inner bg-pink-400" style="width:${paguSelesaiPct}%"></div></div>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function formatRupiah(num) {
+      return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(num);
+    }
+
+    fetchData();
+  </script>
 
 
   </body>
 </html>
+
 
 
 
