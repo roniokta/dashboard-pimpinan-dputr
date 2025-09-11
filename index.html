@@ -56,33 +56,23 @@
       100% { transform: translateX(-50%); }
     }
 
-   /* Efek tetesan hujan */
-.raindrop {
-  position: absolute;
-  top: -100px;
-  width: 2px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 1px;
-  animation: fall linear infinite;
-  z-index: 3;
-}
-@keyframes fall {
-  0% { transform: translateY(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(110vh); opacity: 0; }
-}
-
-
-    /* Table */
-    #data-table th {
-      text-align: center;
-      font-weight: 600;
-      white-space: nowrap;
+    /* Efek tetesan hujan */
+    .raindrop {
+      position: absolute;
+      top: -100px;
+      width: 2px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 1px;
+      animation: fall linear infinite;
+      z-index: 3;
     }
-    #data-table tr:nth-child(even) { background-color: #f9fafb; }
-    #data-table tr:hover { background-color: #f1f5f9; transition: 0.18s; }
+    @keyframes fall {
+      0% { transform: translateY(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(110vh); opacity: 0; }
+    }
 
     /* Dashboard Card */
     .dashboard-card {
@@ -97,7 +87,6 @@
       border-radius: 18px;
       cursor: pointer;
       user-select: none;
-      -webkit-tap-highlight-color: transparent;
       background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
       transition: all 0.3s ease;
@@ -140,69 +129,39 @@
       position: relative;
       z-index: 1;
     }
-
-    /* mobile: full width cards */
-    @media (max-width: 640px) {
-      .dashboard-card { width: 100%; height: auto; padding: 1rem; }
-      .dashboard-card .card-img { width: 56px; height: 56px; }
-    }
-
-    /* Percentage highlight */
-    .pct-high {
-      background-color: #dcfce7; color: #14532d;
-      font-weight: 700; border-radius: 6px;
-      padding: 0.18rem 0.5rem; display: inline-block;
-    }
-    .pct-medium {
-      background-color: #fef3c7; color: #92400e;
-      font-weight: 700; border-radius: 6px;
-      padding: 0.18rem 0.5rem; display: inline-block;
-    }
-    .pct-low {
-      background-color: #fee2e2; color: #7f1d1d;
-      font-weight: 700; border-radius: 6px;
-      padding: 0.18rem 0.5rem; display: inline-block;
-    }
-    .table-cell-nowrap { white-space: nowrap; }
   </style>
 </head>
 
 <body class="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 min-h-screen flex flex-col items-center justify-start">
 
-  <!-- Header Fullscreen -->
+  <!-- Header -->
   <div class="header-bg w-full relative">
     <div class="absolute inset-0 bg-black/30 z-0"></div>
     <div id="rain-container"></div>
- <!-- efek air hujan -->
 
     <div class="relative flex flex-col lg:flex-row items-center justify-center gap-6 px-6 text-center lg:text-left z-10">
-      <!-- Foto + Nama -->
       <div class="flex flex-col items-center lg:items-start animate__animated animate__fadeInLeft">
         <img src="assets/kepala-dinas.jpg" 
              alt="Kepala Dinas" 
-             class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-white shadow-xl object-contain object-center bg-white"/>
-
-        <p class="mt-3 text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white drop-shadow-lg text-center lg:text-left border-b-2 border-white pb-1">
+             class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-white shadow-xl object-contain bg-white"/>
+        <p class="mt-3 text-lg md:text-2xl font-bold text-white drop-shadow-lg border-b-2 border-white pb-1">
           Dr. Ir. H. Zeis Zultaqawa, M.M., IPU, ASEAN ENG.
         </p>
-        <p class="text-xs sm:text-sm md:text-base lg:text-lg text-white drop-shadow-lg mt-1">
+        <p class="text-sm md:text-lg text-white drop-shadow-lg mt-1">
           Kepala Dinas
         </p>
       </div>
 
-      <!-- Judul -->
-      <h1 class="max-w-[700px] text-lg sm:text-2xl md:text-3xl lg:text-5xl font-extrabold text-white drop-shadow-lg leading-snug animate__animated animate__fadeInDown">
+      <h1 class="max-w-[700px] text-2xl md:text-5xl font-extrabold text-white drop-shadow-lg leading-snug animate__animated animate__fadeInDown">
         DASHBOARD PROGRES KEGIATAN <br class="hidden md:block"> DPUTR KABUPATEN BANDUNG
       </h1>
     </div>
-
-    <!-- Wave -->
     <div class="wave"></div>
   </div>
 
-  <!-- 🔥 Dashboard Progress Cards (gantikan tabel lama) -->
+  <!-- Dashboard Progress -->
   <div class="w-full max-w-[1500px] xl:max-w-[1600px] px-4 sm:px-6 mt-6 mb-6">
-    <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">
+    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">
       📊 Rekap dan Progres Kegiatan DPUTR TA 2025
     </h2>
     <div id="dashboard" class="space-y-10"></div>
@@ -385,212 +344,102 @@
     </script>
   <script>
   // Buat efek hujan di header
-  const rainContainer = document.getElementById("rain-container");
+ <!-- Efek hujan -->
+  <script>
+    const rainContainer = document.getElementById("rain-container");
+    function createRaindrop() {
+      const drop = document.createElement("div");
+      drop.className = "raindrop";
+      drop.style.left = Math.random() * window.innerWidth + "px";
+      drop.style.animationDuration = (1 + Math.random() * 1.5) + "s";
+      drop.style.opacity = Math.random() * 0.7 + 0.3;
+      rainContainer.appendChild(drop);
+      setTimeout(() => drop.remove(), 2500);
+    }
+    setInterval(createRaindrop, 1520);
+  </script>
 
-  function createRaindrop() {
-    const drop = document.createElement("div");
-    drop.className = "raindrop";
-    drop.style.left = Math.random() * window.innerWidth + "px";
-    drop.style.animationDuration = (1 + Math.random() * 1.5) + "s";
-    drop.style.opacity = Math.random() * 0.7 + 0.3;
-    rainContainer.appendChild(drop);
+  <!-- Script Dashboard Progress -->
+  <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1875135079&single=true&output=csv";
 
-    setTimeout(() => drop.remove(), 2500);
-  }
+    async function fetchData() {
+      const res = await fetch(csvUrl);
+      const text = await res.text();
+      const rows = text.trim().split("\n").map(r => r.split(","));
+      renderDashboard(rows.slice(1));
+    }
 
-  // setiap 120ms muncul tetesan baru
-  setInterval(createRaindrop, 1520);
-</script>
-<!-- Script Dashboard Progress -->
-<script>
-  const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1875135079&single=true&output=csv";
+    function renderDashboard(data) {
+      const container = document.getElementById("dashboard");
+      container.innerHTML = "";
 
-  async function fetchData() {
-    const res = await fetch(csvUrl);
-    const text = await res.text();
-    const rows = text.trim().split("\n").map(r => r.split(","));
-    const data = rows.slice(1);
-    renderDashboard(data);
-  }
+      data.forEach(row => {
+        const unit = row[0];
+        if (!unit) return;
 
-  function renderDashboard(data) {
-  const container = document.getElementById("dashboard");
-  container.innerHTML = "";
+        const jumlah = parseInt(row[1]) || 0;
+        const pagu = parseFloat(row[2]) || 0;
+        const persiapan = parseInt(row[3]) || 0;
+        const nilaiPersiapan = parseFloat(row[4]) || 0;
+        const berkontrak = parseInt(row[5]) || 0;
+        const nilaiBerkontrak = parseFloat(row[6]) || 0;
+        const selesai = parseInt(row[7]) || 0;
+        const nilaiSelesai = parseFloat(row[8]) || 0;
 
-  data.forEach(row => {
-    const unit = row[0];
-    if (!unit) return;
-    const jumlah = parseInt(row[1]) || 0;
-    const pagu = parseFloat(row[2]) || 0;
-    const persiapan = parseInt(row[3]) || 0;
-    const nilaiPersiapan = parseFloat(row[4]) || 0;
-    const berkontrak = parseInt(row[5]) || 0;
-    const nilaiBerkontrak = parseFloat(row[6]) || 0;
-    const selesai = parseInt(row[7]) || 0;
-    const nilaiSelesai = parseFloat(row[8]) || 0;
-    if (jumlah === 0 && pagu === 0) return;
+        if (jumlah === 0 && pagu === 0) return;
 
-    // Hitung persentase
-    const persiapanPct = ((persiapan / jumlah) * 100).toFixed(1);
-    const berkontrakPct = ((berkontrak / jumlah) * 100).toFixed(1);
-    const selesaiPct = ((selesai / jumlah) * 100).toFixed(1);
-    const paguPersiapanPct = ((nilaiPersiapan / pagu) * 100).toFixed(1);
-    const paguBerkontrakPct = ((nilaiBerkontrak / pagu) * 100).toFixed(1);
-    const paguSelesaiPct = ((nilaiSelesai / pagu) * 100).toFixed(1);
+        const persiapanPct = ((persiapan / jumlah) * 100).toFixed(1);
+        const berkontrakPct = ((berkontrak / jumlah) * 100).toFixed(1);
+        const selesaiPct = ((selesai / jumlah) * 100).toFixed(1);
+        const paguPersiapanPct = ((nilaiPersiapan / pagu) * 100).toFixed(1);
+        const paguBerkontrakPct = ((nilaiBerkontrak / pagu) * 100).toFixed(1);
+        const paguSelesaiPct = ((nilaiSelesai / pagu) * 100).toFixed(1);
 
-    // Buat card
-    const card = document.createElement("div");
-    card.className = "bg-white shadow-lg rounded-xl p-6 w-full";
+        const card = document.createElement("div");
+        card.className = "bg-white shadow-lg rounded-xl p-6 w-full";
 
-    card.innerHTML = `
-      <h2 class="text-2xl font-bold text-indigo-600 mb-2">${unit}</h2>
-      <p class="text-sm text-gray-600 mb-4">
-        Jumlah Total Paket: <span class="font-semibold">${jumlah}</span>
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <!-- Persiapan -->
-        <div class="p-4 rounded-lg border bg-indigo-50">
-          <h3 class="font-semibold text-lg mb-2">Persiapan</h3>
-          <p class="text-2xl font-bold text-indigo-700">${persiapan}</p>
-          <p class="text-gray-600">(${persiapanPct}% paket)</p>
-          <p class="text-sm text-gray-500 mb-3">
-            ${formatRupiah(nilaiPersiapan)} (${paguPersiapanPct}% pagu)
+        card.innerHTML = `
+          <h2 class="text-2xl font-bold text-indigo-600 mb-2">${unit}</h2>
+          <p class="text-sm text-gray-600 mb-4">
+            Jumlah Total Paket: <span class="font-semibold">${jumlah}</span>
           </p>
-          <div class="space-y-2">
-            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-indigo-500 rounded" style="width:${persiapanPct}%"></div></div>
-            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-pink-400 rounded" style="width:${paguPersiapanPct}%"></div></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-4 rounded-lg border bg-indigo-50">
+              <h3 class="font-semibold text-lg mb-2">Persiapan</h3>
+              <p class="text-2xl font-bold text-indigo-700">${persiapan}</p>
+              <p class="text-gray-600">(${persiapanPct}% paket)</p>
+              <p class="text-sm text-gray-500 mb-3">${formatRupiah(nilaiPersiapan)} (${paguPersiapanPct}% pagu)</p>
+            </div>
+
+            <div class="p-4 rounded-lg border bg-green-50">
+              <h3 class="font-semibold text-lg mb-2">Berkontrak</h3>
+              <p class="text-2xl font-bold text-green-700">${berkontrak}</p>
+              <p class="text-gray-600">(${berkontrakPct}% paket)</p>
+              <p class="text-sm text-gray-500 mb-3">${formatRupiah(nilaiBerkontrak)} (${paguBerkontrakPct}% pagu)</p>
+            </div>
+
+            <div class="p-4 rounded-lg border bg-blue-50">
+              <h3 class="font-semibold text-lg mb-2">Selesai</h3>
+              <p class="text-2xl font-bold text-blue-700">${selesai}</p>
+              <p class="text-gray-600">(${selesaiPct}% paket)</p>
+              <p class="text-sm text-gray-500 mb-3">${formatRupiah(nilaiSelesai)} (${paguSelesaiPct}% pagu)</p>
+            </div>
           </div>
-        </div>
+        `;
+        container.appendChild(card);
+      });
+    }
 
-        <!-- Berkontrak -->
-        <div class="p-4 rounded-lg border bg-green-50">
-          <h3 class="font-semibold text-lg mb-2">Berkontrak</h3>
-          <p class="text-2xl font-bold text-green-700">${berkontrak}</p>
-          <p class="text-gray-600">(${berkontrakPct}% paket)</p>
-          <p class="text-sm text-gray-500 mb-3">
-            ${formatRupiah(nilaiBerkontrak)} (${paguBerkontrakPct}% pagu)
-          </p>
-          <div class="space-y-2">
-            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-green-500 rounded" style="width:${berkontrakPct}%"></div></div>
-            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-pink-400 rounded" style="width:${paguBerkontrakPct}%"></div></div>
-          </div>
-        </div>
+    function formatRupiah(num) {
+      return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(num);
+    }
 
-        <!-- Selesai -->
-        <div class="p-4 rounded-lg border bg-blue-50">
-          <h3 class="font-semibold text-lg mb-2">Selesai</h3>
-          <p class="text-2xl font-bold text-blue-700">${selesai}</p>
-          <p class="text-gray-600">(${selesaiPct}% paket)</p>
-          <p class="text-sm text-gray-500 mb-3">
-            ${formatRupiah(nilaiSelesai)} (${paguSelesaiPct}% pagu)
-          </p>
-          <div class="space-y-2">
-            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-blue-500 rounded" style="width:${selesaiPct}%"></div></div>
-            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-pink-400 rounded" style="width:${paguSelesaiPct}%"></div></div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Legend -->
-      <div class="flex justify-center gap-6 mt-6 text-sm text-gray-600">
-        <div class="flex items-center gap-2"><span class="w-5 h-2 bg-indigo-500 rounded"></span> % Paket</div>
-        <div class="flex items-center gap-2"><span class="w-5 h-2 bg-pink-400 rounded"></span> % Pagu</div>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-        ${formatRupiah(nilaiPersiapan)} (${paguPersiapanPct}% pagu)
-      </p>
-      <div class="space-y-1">
-        <div class="progress-bar"><div class="progress-inner bg-indigo-500" style="width:${persiapanPct}%"></div></div>
-        <div class="progress-bar"><div class="progress-inner bg-pink-400" style="width:${paguPersiapanPct}%"></div></div>
-      </div>
-    </div>
-    <i class="fa-solid fa-arrow-right arrow"></i>
-    <div class="p-4 rounded-lg border bg-green-50">
-      <h3 class="font-semibold text-lg">Berkontrak</h3>
-      <p class="text-xl font-bold text-green-700">${berkontrak}</p>
-      <p class="text-gray-600">(${berkontrakPct}% paket)</p>
-      <p class="text-sm text-gray-500 mb-2">
-        ${formatRupiah(nilaiBerkontrak)} (${paguBerkontrakPct}% pagu)
-      </p>
-      <div class="space-y-1">
-        <div class="progress-bar"><div class="progress-inner bg-green-500" style="width:${berkontrakPct}%"></div></div>
-        <div class="progress-bar"><div class="progress-inner bg-pink-400" style="width:${paguBerkontrakPct}%"></div></div>
-      </div>
-    </div>
-    <i class="fa-solid fa-arrow-right arrow"></i>
-    <div class="p-4 rounded-lg border bg-blue-50">
-      <h3 class="font-semibold text-lg">Selesai</h3>
-      <p class="text-xl font-bold text-blue-700">${selesai}</p>
-      <p class="text-gray-600">(${selesaiPct}% paket)</p>
-      <p class="text-sm text-gray-500 mb-2">
-        ${formatRupiah(nilaiSelesai)} (${paguSelesaiPct}% pagu)
-      </p>
-      <div class="space-y-1">
-        <div class="progress-bar"><div class="progress-inner bg-blue-500" style="width:${selesaiPct}%"></div></div>
-        <div class="progress-bar"><div class="progress-inner bg-pink-400" style="width:${paguSelesaiPct}%"></div></div>
-      </div>
-    </div>
-  </div>
-  <!-- Legend -->
-  <div class="flex justify-center gap-6 mt-4 text-sm text-gray-600">
-    <div class="flex items-center gap-2"><span class="w-4 h-2 bg-indigo-500 rounded"></span> % Paket</div>
-    <div class="flex items-center gap-2"><span class="w-4 h-2 bg-pink-400 rounded"></span> % Pagu</div>
-  </div>
-`;
-
-      container.appendChild(card);
-    });
-  }
-
-  function formatRupiah(num) {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0
-    }).format(num);
-  }
-
-  fetchData();
-</script>
-
-
-
-  </body>
+    fetchData();
+  </script>
+</body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
