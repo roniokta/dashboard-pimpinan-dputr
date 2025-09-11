@@ -414,42 +414,97 @@
   }
 
   function renderDashboard(data) {
-    const container = document.getElementById("dashboard");
-    container.innerHTML = "";
-    data.forEach(row => {
-      const unit = row[0];
-      if (!unit) return;
-      const jumlah = parseInt(row[1]) || 0;
-      const pagu = parseFloat(row[2]) || 0;
-      const persiapan = parseInt(row[3]) || 0;
-      const nilaiPersiapan = parseFloat(row[4]) || 0;
-      const berkontrak = parseInt(row[5]) || 0;
-      const nilaiBerkontrak = parseFloat(row[6]) || 0;
-      const selesai = parseInt(row[7]) || 0;
-      const nilaiSelesai = parseFloat(row[8]) || 0;
-      if (jumlah === 0 && pagu === 0) return;
+  const container = document.getElementById("dashboard");
+  container.innerHTML = "";
 
-      // Persentase
-      const persiapanPct = ((persiapan / jumlah) * 100).toFixed(1);
-      const berkontrakPct = ((berkontrak / jumlah) * 100).toFixed(1);
-      const selesaiPct = ((selesai / jumlah) * 100).toFixed(1);
-      const paguPersiapanPct = ((nilaiPersiapan / pagu) * 100).toFixed(1);
-      const paguBerkontrakPct = ((nilaiBerkontrak / pagu) * 100).toFixed(1);
-      const paguSelesaiPct = ((nilaiSelesai / pagu) * 100).toFixed(1);
+  data.forEach(row => {
+    const unit = row[0];
+    if (!unit) return;
+    const jumlah = parseInt(row[1]) || 0;
+    const pagu = parseFloat(row[2]) || 0;
+    const persiapan = parseInt(row[3]) || 0;
+    const nilaiPersiapan = parseFloat(row[4]) || 0;
+    const berkontrak = parseInt(row[5]) || 0;
+    const nilaiBerkontrak = parseFloat(row[6]) || 0;
+    const selesai = parseInt(row[7]) || 0;
+    const nilaiSelesai = parseFloat(row[8]) || 0;
+    if (jumlah === 0 && pagu === 0) return;
 
-      const card = document.createElement("div");
-      card.className = "bg-white shadow-lg rounded-xl p-6";
-  card.innerHTML = `
-  <h2 class="text-2xl font-bold text-indigo-600 mb-2">${unit}</h2>
-  <p class="text-sm text-gray-600 mb-4">
-    Jumlah Total Paket: <span class="font-semibold">${jumlah}</span>
-  </p>
-  <div class="grid grid-cols-3 items-center gap-4 text-center">
-    <div class="p-4 rounded-lg border bg-indigo-50">
-      <h3 class="font-semibold text-lg">Persiapan</h3>
-      <p class="text-xl font-bold text-indigo-700">${persiapan}</p>
-      <p class="text-gray-600">(${persiapanPct}% paket)</p>
-      <p class="text-sm text-gray-500 mb-2">
+    // Hitung persentase
+    const persiapanPct = ((persiapan / jumlah) * 100).toFixed(1);
+    const berkontrakPct = ((berkontrak / jumlah) * 100).toFixed(1);
+    const selesaiPct = ((selesai / jumlah) * 100).toFixed(1);
+    const paguPersiapanPct = ((nilaiPersiapan / pagu) * 100).toFixed(1);
+    const paguBerkontrakPct = ((nilaiBerkontrak / pagu) * 100).toFixed(1);
+    const paguSelesaiPct = ((nilaiSelesai / pagu) * 100).toFixed(1);
+
+    // Buat card
+    const card = document.createElement("div");
+    card.className = "bg-white shadow-lg rounded-xl p-6 w-full";
+
+    card.innerHTML = `
+      <h2 class="text-2xl font-bold text-indigo-600 mb-2">${unit}</h2>
+      <p class="text-sm text-gray-600 mb-4">
+        Jumlah Total Paket: <span class="font-semibold">${jumlah}</span>
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Persiapan -->
+        <div class="p-4 rounded-lg border bg-indigo-50">
+          <h3 class="font-semibold text-lg mb-2">Persiapan</h3>
+          <p class="text-2xl font-bold text-indigo-700">${persiapan}</p>
+          <p class="text-gray-600">(${persiapanPct}% paket)</p>
+          <p class="text-sm text-gray-500 mb-3">
+            ${formatRupiah(nilaiPersiapan)} (${paguPersiapanPct}% pagu)
+          </p>
+          <div class="space-y-2">
+            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-indigo-500 rounded" style="width:${persiapanPct}%"></div></div>
+            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-pink-400 rounded" style="width:${paguPersiapanPct}%"></div></div>
+          </div>
+        </div>
+
+        <!-- Berkontrak -->
+        <div class="p-4 rounded-lg border bg-green-50">
+          <h3 class="font-semibold text-lg mb-2">Berkontrak</h3>
+          <p class="text-2xl font-bold text-green-700">${berkontrak}</p>
+          <p class="text-gray-600">(${berkontrakPct}% paket)</p>
+          <p class="text-sm text-gray-500 mb-3">
+            ${formatRupiah(nilaiBerkontrak)} (${paguBerkontrakPct}% pagu)
+          </p>
+          <div class="space-y-2">
+            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-green-500 rounded" style="width:${berkontrakPct}%"></div></div>
+            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-pink-400 rounded" style="width:${paguBerkontrakPct}%"></div></div>
+          </div>
+        </div>
+
+        <!-- Selesai -->
+        <div class="p-4 rounded-lg border bg-blue-50">
+          <h3 class="font-semibold text-lg mb-2">Selesai</h3>
+          <p class="text-2xl font-bold text-blue-700">${selesai}</p>
+          <p class="text-gray-600">(${selesaiPct}% paket)</p>
+          <p class="text-sm text-gray-500 mb-3">
+            ${formatRupiah(nilaiSelesai)} (${paguSelesaiPct}% pagu)
+          </p>
+          <div class="space-y-2">
+            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-blue-500 rounded" style="width:${selesaiPct}%"></div></div>
+            <div class="h-2 bg-gray-200 rounded"><div class="h-2 bg-pink-400 rounded" style="width:${paguSelesaiPct}%"></div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Legend -->
+      <div class="flex justify-center gap-6 mt-6 text-sm text-gray-600">
+        <div class="flex items-center gap-2"><span class="w-5 h-2 bg-indigo-500 rounded"></span> % Paket</div>
+        <div class="flex items-center gap-2"><span class="w-5 h-2 bg-pink-400 rounded"></span> % Pagu</div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
         ${formatRupiah(nilaiPersiapan)} (${paguPersiapanPct}% pagu)
       </p>
       <div class="space-y-1">
@@ -510,6 +565,7 @@
 
   </body>
 </html>
+
 
 
 
