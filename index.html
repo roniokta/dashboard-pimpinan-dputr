@@ -14,122 +14,52 @@
   <!-- Animate.css CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
+  <!-- Chart.js for line chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    :root {
-      --card-w: 240px;
-      --card-h: 160px;
-    }
+    :root { --card-w: 240px; --card-h: 160px; }
+    body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
+    .header-bg { background: linear-gradient(135deg, #2563eb, #9333ea); height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 
-    /* Header fullscreen */
-    .header-bg {
-      background: linear-gradient(135deg, #2563eb, #9333ea);
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .wave { position: absolute; bottom: -1px; left: 0; width: 200%; height: 120px; background: url('https://svgshare.com/i/uUu.svg') repeat-x; background-size: 50% 120px; animation: waveMove 8s linear infinite; opacity: 0.9; z-index: 5; }
+    @keyframes waveMove { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* Wave animasi bawah */
-    .wave {
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 200%;
-      height: 120px;
-      background: url('https://svgshare.com/i/uUu.svg') repeat-x;
-      background-size: 50% 120px;
-      animation: waveMove 8s linear infinite;
-      opacity: 0.9;
-      z-index: 5;
-    }
-    @keyframes waveMove {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
+    .raindrop { position: absolute; top: -100px; width: 2px; height: 40px; background: rgba(255, 255, 255, 0.5); border-radius: 1px; animation: fall linear infinite; z-index: 3; }
+    @keyframes fall { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
 
-    /* Efek tetesan hujan */
-    .raindrop {
-      position: absolute;
-      top: -100px;
-      width: 2px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 1px;
-      animation: fall linear infinite;
-      z-index: 3;
-    }
-    @keyframes fall {
-      0% { transform: translateY(0); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(110vh); opacity: 0; }
-    }
-
-    /* Dashboard Card */
-    .dashboard-card {
-      width: var(--card-w);
-      height: var(--card-h);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 1rem;
-      border-radius: 18px;
-      cursor: pointer;
-      user-select: none;
-      background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .dashboard-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(168,85,247,0.15));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+    .dashboard-card { width: var(--card-w); height: var(--card-h); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; border-radius: 18px; cursor: pointer; user-select: none; background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%); box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden; }
+    .dashboard-card::before { content: ""; position: absolute; inset: 0; border-radius: 18px; background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(168,85,247,0.15)); opacity: 0; transition: opacity 0.3s ease; }
     .dashboard-card:hover::before { opacity: 1; }
-    .dashboard-card:hover {
-      transform: translateY(-6px) scale(1.04);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
-    }
+    .dashboard-card:hover { transform: translateY(-6px) scale(1.04); box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
     .dashboard-card:active { transform: scale(0.97); }
-    .dashboard-card .card-img {
-      width: 72px;
-      height: 72px;
-      object-fit: contain;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
-      transition: transform 0.3s ease, filter 0.3s ease;
-      position: relative;
-      z-index: 1;
-    }
-    .dashboard-card:hover .card-img {
-      transform: scale(1.15) rotate(3deg);
-      filter: drop-shadow(0 0 12px rgba(59,130,246,0.5));
-    }
-    .dashboard-card .card-text {
-      font-weight: 700;
-      color: #1f2937;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-      position: relative;
-      z-index: 1;
-    }
+    .dashboard-card .card-img { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25)); transition: transform 0.3s ease, filter 0.3s ease; position: relative; z-index: 1; }
+    .dashboard-card:hover .card-img { transform: scale(1.15) rotate(3deg); filter: drop-shadow(0 0 12px rgba(59,130,246,0.5)); }
+    .dashboard-card .card-text { font-weight: 700; color: #1f2937; font-size: 1rem; margin-top: 0.5rem; position: relative; z-index: 1; }
   </style>
+
+  <!-- Helper Sanitasi -->
+  <script>
+    const ALLOWED_URL_RE = /^(https?:|mailto:|tel:)/i;
+    function sanitizeText(v, max = 5000) {
+      if (v == null) return '';
+      v = String(v);
+      v = v.replace(/[\u0000-\u001F\u007F]/g, '');
+      v = v.replace(/<\s*\/?\s*script\b[^>]*>/gi, '');
+      v = v.replace(/\bjavascript\s*:/gi, '');
+      if (/^[=+\-@]/.test(v)) v = "'" + v;
+      return v.trim().slice(0, max);
+    }
+    function escapeHTML(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    }
+    function safeURL(u) {
+      const s = String(u || '').trim();
+      return ALLOWED_URL_RE.test(s) ? s : '#';
+    }
+    function setText(el, v) { el.textContent = sanitizeText(v); }
+  </script>
 </head>
 
 <body class="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 min-h-screen flex flex-col items-center justify-start">
@@ -141,15 +71,11 @@
 
     <div class="relative flex flex-col lg:flex-row items-center justify-center gap-6 px-6 text-center lg:text-left z-10">
       <div class="flex flex-col items-center lg:items-start animate__animated animate__fadeInLeft">
-        <img src="assets/kepala-dinas.jpg" 
-             alt="Kepala Dinas" 
-             class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-white shadow-xl object-contain bg-white"/>
+        <img src="assets/kepala-dinas.jpg" alt="Kepala Dinas" class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-white shadow-xl object-contain bg-white"/>
         <p class="mt-3 text-lg md:text-2xl font-bold text-white drop-shadow-lg border-b-2 border-white pb-1">
           Dr. Ir. H. Zeis Zultaqawa, M.M., IPU, ASEAN ENG.
         </p>
-        <p class="text-sm md:text-lg text-white drop-shadow-lg mt-1">
-          Kepala Dinas
-        </p>
+        <p class="text-sm md:text-lg text-white drop-shadow-lg mt-1">Kepala Dinas</p>
       </div>
 
       <h1 class="max-w-[700px] text-2xl md:text-5xl font-extrabold text-white drop-shadow-lg leading-snug animate__animated animate__fadeInDown">
@@ -159,18 +85,30 @@
     <div class="wave"></div>
   </div>
 
+  <!-- ====== (BARU) RINGKASAN REKAP DINAS + CHART (gid=1853757195) ====== -->
+  <div class="w-full max-w-7xl px-4 sm:px-6 -mt-10 mb-10">
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-6">
+      <h2 class="text-xl md:text-2xl font-bold text-teal-700 mb-6 text-center">📊 Rekap Dinas & Tren Prognosis (Sept–Nov 2025)</h2>
+
+      <!-- Cards ringkasan -->
+      <div id="rekap-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10"></div>
+
+      <!-- Line chart -->
+      <div class="bg-white/80 rounded-2xl shadow p-4">
+        <h3 class="text-center text-teal-700 font-semibold mb-3">📈 Tren Prognosis</h3>
+        <canvas id="prognosisChartTop"></canvas>
+      </div>
+    </div>
+  </div>
+
   <!-- Dashboard Progress -->
   <div class="w-full max-w-[1500px] xl:max-w-[1600px] px-4 sm:px-6 mt-6 mb-6">
-    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">
-      📊 Rekap dan Progres Kegiatan DPUTR TA 2025
-    </h2>
+    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">📊 Rekap dan Progres Kegiatan DPUTR TA 2025</h2>
     <div id="dashboard" class="space-y-10"></div>
   </div>
 
-
   <!-- Grid cards -->
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 px-4 sm:px-6 w-full max-w-[1500px] xl:max-w-[1600px] mb-10 justify-items-center">
-    <!-- semua card tetap sama -->
     <a href="https://sites.google.com/view/bidang-jalan/progres-pekerjaan-bidang-jalan" class="dashboard-card animate__animated animate__fadeInUp delay-1" aria-label="Bidang Jalan">
       <img src="https://img.icons8.com/color/80/road.png" alt="Bidang Jalan" class="card-img mb-2" />
       <span class="card-text">BIDANG JALAN</span>
@@ -199,270 +137,389 @@
       <img src="https://img.icons8.com/color/80/recycling.png" alt="HDPE Recycling" class="card-img mb-2" />
       <span class="card-text">HDPE</span>
     </a>
-     <a href="https://sites.google.com/view/datadisposisipermohonankrk/permohonan-krk-pmp-umk-dan-permohonan-rencana-tapak?authuser=0" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="KRK">
-    <img src="https://img.icons8.com/color/80/document.png" alt="Dokumen KRK" class="card-img mb-2" />
-    <span class="card-text">PERMOHONAN KRK,PMP UMK & RENCANA TAPAK</span>
-  </a>
-<a href="https://sites.google.com/view/potensidiluarsistem/potensi-diluar-sistem" 
+    <a href="https://sites.google.com/view/datadisposisipermohonankrk/permohonan-krk-pmp-umk-dan-permohonan-rencana-tapak?authuser=0" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="KRK">
+      <img src="https://img.icons8.com/color/80/document.png" alt="Dokumen KRK" class="card-img mb-2" />
+      <span class="card-text">PERMOHONAN KRK,PMP UMK & RENCANA TAPAK</span>
+    </a>
+    <a href="https://sites.google.com/view/potensidiluarsistem/potensi-diluar-sistem" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="Potensi Luar Sistem">
+      <img src="https://img.icons8.com/color/80/money-bag.png" alt="Potensi Luar Sistem" class="card-img mb-2" />
+      <span class="card-text">Potensi Diluar Sistem</span>
+    </a>
+     <a href="https://sites.google.com/view/informasi-persampahan/peta-sebaran-tps3r-dan-dgn" 
    class="dashboard-card animate__animated animate__fadeInUp delay-7" 
-   aria-label="Potensi Luar Sistem">
-  <img src="https://img.icons8.com/color/80/money-bag.png" 
-       alt="Potensi Luar Sistem" 
+   aria-label="Informasi Persampahan">
+  <img src="https://img.icons8.com/color/80/trash.png" 
+       alt="Informasi Persampahan" 
        class="card-img mb-2" />
-  <span class="card-text">Potensi Diluar Sistem</span>
+  <span class="card-text">Informasi Persampahan</span>
 </a>
-
     <a href="https://sites.google.com/view/tanya-saya/tanya-ai" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="Tanya AI">
-    <img src="https://img.icons8.com/color/80/artificial-intelligence.png" alt="Tanya AI" class="card-img mb-2" />
-    <span class="card-text">Tanya AI</span>
-  </a>
+      <img src="https://img.icons8.com/color/80/artificial-intelligence.png" alt="Tanya AI" class="card-img mb-2" />
+      <span class="card-text">Tanya AI</span>
+    </a>
   </div>
 
-    <!-- Script: ambil CSV dari Google Sheets (publish to web) -->
-    <script>
-      const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQfPFj1SxjErXTz4pwoIioVXnA90uqCEjPBDPhnNi6y9j5yPv59-LWTwNlCdg4mNtDgMkktWjt2mWM/pub?gid=0&single=true&output=csv";
+  <!-- Data tabel dari Sheet (opsional): aman karena textContent -->
+  <script>
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQfPFj1SxjErXTz4pwoIioVXnA90uqCEjPBDPhnNi6y9j5yPv59-LWTwNlCdg4mNtDgMkktWjt2mWM/pub?gid=0&single=true&output=csv";
+    function toNumber(val){ if (val==null) return NaN; const n=String(val).replace(/[^\d.-]/g,""); return n?Number(n):NaN; }
+    function formatRupiah(v){ const n=toNumber(v); if (isNaN(n)) return String(v??''); return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",minimumFractionDigits:0}).format(n); }
+    function formatPercent(v){ if (v==null) return "-"; const s=String(v).trim(); if (s.endsWith("%")) return sanitizeText(s); let n=toNumber(s); if (isNaN(n)) return sanitizeText(v); if (n<=1) n*=100; return n.toFixed(2)+"%"; }
 
-      function toNumber(val) {
-        if (val === null || val === undefined) return NaN;
-        const n = String(val).replace(/[^\d.-]/g, "");
-        return n ? Number(n) : NaN;
+    // Parser CSV sederhana dengan dukungan kutip
+    function parseCSV(text){
+      const rows=[]; let cur="", row=[], inQ=false;
+      for (let i=0;i<text.length;i++){
+        const ch=text[i], nch=text[i+1];
+        if (inQ){
+          if (ch==='"' && nch==='"'){ cur+='"'; i++; }
+          else if (ch==='"'){ inQ=false; }
+          else { cur+=ch; }
+        } else {
+          if (ch==='"'){ inQ=true; }
+          else if (ch===','){ row.push(cur); cur=""; }
+          else if (ch==='\n'){ row.push(cur); rows.push(row); row=[]; cur=""; }
+          else if (ch==='\r'){ /* ignore */ }
+          else { cur+=ch; }
+        }
       }
+      row.push(cur); rows.push(row);
+      return rows;
+    }
 
-      function formatRupiah(value) {
-        const n = toNumber(value);
-        if (isNaN(n)) return value;
-        return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(n);
-      }
+    async function loadTableData(){
+      try{
+        const res = await fetch(safeURL(sheetUrl));
+        const text = await res.text();
+        const rows = parseCSV(text.trim());
+        if (!rows || !rows.length) return;
 
-      function formatPercent(value) {
-        if (value === null || value === undefined) return "-";
-        const s = String(value).trim();
-        if (s.endsWith("%")) return s;
-        let n = toNumber(s);
-        if (isNaN(n)) return value;
-        if (n <= 1) n = n * 100;
-        return n.toFixed(2) + "%";
-      }
+        let header = rows[0].map(h => sanitizeText(h.trim()));
+        const bodyRows = rows.slice(1);
 
-      async function loadTableData() {
-        try {
-          const res = await fetch(sheetUrl);
-          const text = await res.text();
+        const headerRow = document.getElementById("table-header");
+        const tbody     = document.getElementById("table-body");
+        if (!headerRow || !tbody) return; // jika memang tidak ada tabel di halaman ini
 
-          const rows = text.trim().split("\n").map(r => r.split(","));
-          if (!rows || rows.length === 0) return;
+        // indeks bantuan (opsional)
+        const idxPagu = header.findIndex(h => h.toLowerCase().includes("pagu"));
+        const idxKontrakAll = header.map((h,i)=>({h,i})).filter(({h})=>h.toLowerCase().includes("nilai kontrak")).map(({i})=>i);
+        const idxKontrak = idxKontrakAll.length ? idxKontrakAll[idxKontrakAll.length-1] : -1;
 
-          let header = rows[0].map(h => h.trim());
-          const bodyRows = rows.slice(1);
+        let idxPersenPagu = header.findIndex(h => h.toLowerCase().includes("persentase") && h.toLowerCase().includes("pagu"));
+        let addComputed = false;
+        if (idxPersenPagu === -1) { header.push("PERSENTASE TERHADAP PAGU"); idxPersenPagu = header.length-1; addComputed = true; }
 
-          const idxPagu = header.findIndex(h => h.toLowerCase().includes("pagu"));
-          const idxKontrakAll = header.map((h, i) => ({ h, i }))
-                                      .filter(({ h }) => h.toLowerCase().includes("nilai kontrak"))
-                                      .map(({ i }) => i);
-          const idxKontrak = idxKontrakAll.length ? idxKontrakAll[idxKontrakAll.length - 1] : -1;
+        headerRow.innerHTML = "";
+        header.forEach(h => {
+          const th=document.createElement("th");
+          th.className="px-3 py-2 border text-xs sm:text-sm md:text-base min-w-[140px] md:min-w-[180px]";
+          setText(th, h);
+          headerRow.appendChild(th);
+        });
 
-          let idxPersenPagu = header.findIndex(h => h.toLowerCase().includes("persentase") && h.toLowerCase().includes("pagu"));
-          let addComputedColumn = false;
-          if (idxPersenPagu === -1) {
-            header.push("PERSENTASE TERHADAP PAGU");
-            idxPersenPagu = header.length - 1;
-            addComputedColumn = true;
+        tbody.innerHTML = "";
+        bodyRows.forEach(row => {
+          const cells = addComputed ? [...row] : row.slice();
+          if (addComputed) cells.push("");
+
+          if (idxPagu !== -1 && idxKontrak !== -1){
+            const paguVal = toNumber(cells[idxPagu]);
+            const kontrakVal = toNumber(cells[idxKontrak]);
+            const percent = (isFinite(paguVal) && paguVal>0 && isFinite(kontrakVal)) ? (kontrakVal/paguVal)*100 : NaN;
+            cells[idxPersenPagu] = isFinite(percent) ? percent.toFixed(2) + "%" : "-";
           }
 
-          const headerRow = document.getElementById("table-header");
-          const tbody = document.getElementById("table-body");
-          headerRow.innerHTML = "";
-          header.forEach(h => {
-            const th = document.createElement("th");
-            th.className = "px-3 py-2 border text-xs sm:text-sm md:text-base min-w-[140px] md:min-w-[180px]";
-            th.textContent = h;
-            headerRow.appendChild(th);
+          const tr=document.createElement("tr");
+          cells.forEach((cell, idx) => {
+            const hLower = (header[idx] || "").toLowerCase();
+            const td=document.createElement("td");
+            td.className="px-3 py-2 border text-gray-700 align-middle";
+            if (hLower.includes("persentase")) {
+              setText(td, formatPercent(cell)); td.classList.add("text-right");
+            } else if (hLower.includes("pagu") || hLower.includes("nilai kontrak") || hLower.includes("anggaran")) {
+              setText(td, formatRupiah(cell)); td.classList.add("text-right");
+            } else if (!isNaN(toNumber(cell)) && String(cell).trim()!=="") {
+              setText(td, cell); td.classList.add("text-right");
+            } else { setText(td, cell); }
+            tr.appendChild(td);
           });
+          tbody.appendChild(tr);
+        });
 
-          tbody.innerHTML = "";
-          bodyRows.forEach((row) => {
-            const cells = addComputedColumn ? [...row, ""] : [...row];
+      } catch(e){ console.error("Gagal memuat data:", e); }
+    }
+  </script>
 
-            if (idxPagu !== -1 && idxKontrak !== -1) {
-              const paguVal = toNumber(cells[idxPagu]);
-              const kontrakVal = toNumber(cells[idxKontrak]);
-              const percent = (isFinite(paguVal) && paguVal > 0 && isFinite(kontrakVal))
-                ? (kontrakVal / paguVal) * 100
-                : NaN;
-              cells[idxPersenPagu] = isFinite(percent) ? percent.toFixed(2) + "%" : "-";
+  <!-- Efek hujan -->
+  <script>
+    const rainContainer = document.getElementById("rain-container");
+    function createRaindrop(){
+      const drop=document.createElement("div");
+      drop.className="raindrop";
+      drop.style.left = Math.random()*window.innerWidth + "px";
+      drop.style.animationDuration = (1 + Math.random()*1.5) + "s";
+      drop.style.opacity = (Math.random()*0.7 + 0.3).toFixed(2);
+      rainContainer.appendChild(drop);
+      setTimeout(()=>drop.remove(), 2500);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      setInterval(createRaindrop, 1520);
+    });
+  </script>
+
+  <!-- ====== (BARU) SCRIPT REKAP DINAS TOP (gid=1853757195) ====== -->
+  <script>
+    (function(){
+      const CSV_REKAP_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1853757195&single=true&output=csv";
+
+      // Formatter khusus rekap
+      const r_fmtIDR = n => isNaN(n) ? '-' :
+        new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n);
+      const r_fmtInt = n => isNaN(n) ? '-' : new Intl.NumberFormat('id-ID').format(n);
+      const r_fmtPct = n => isNaN(n) ? '-' : `${(+n).toFixed(2)}%`;
+
+      // Card component
+      function r_createCard(title, mainValue, subText, progressValue, color="teal"){
+        const hasProgress = progressValue !== undefined && !isNaN(progressValue);
+        const barColor =
+          color==="green" ? "bg-green-500" :
+          color==="cyan"  ? "bg-cyan-500"  :
+          color==="lime"  ? "bg-lime-500"  : "bg-teal-500";
+        return `
+          <div class="bg-white/90 border border-teal-100 p-4 rounded-2xl shadow hover:shadow-lg transition text-center">
+            <h2 class="text-sm font-semibold mb-2 text-gray-600">${title}</h2>
+            <p class="text-xl font-bold text-teal-700">${mainValue ?? '-'}</p>
+            ${subText ? `<p class="mt-1 text-sm text-gray-500">${subText}</p>` : ``}
+            ${hasProgress ? `
+              <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                <div class="${barColor} h-2 rounded-full" style="width:${progressValue}%;"></div>
+              </div>
+            ` : ``}
+          </div>
+        `;
+      }
+
+      // Parser CSV lokal (hindari konflik nama)
+      function parseCSV2(text){
+        const rows=[]; let cur="", row=[], inQ=false;
+        for (let i=0;i<text.length;i++){
+          const ch=text[i], nch=text[i+1];
+          if (inQ){
+            if (ch==='"' && nch==='"'){ cur+='"'; i++; }
+            else if (ch==='"'){ inQ=false; }
+            else { cur+=ch; }
+          } else {
+            if (ch==='"'){ inQ=true; }
+            else if (ch===','){ row.push(cur); cur=""; }
+            else if (ch==='\n'){ row.push(cur); rows.push(row); row=[]; cur=""; }
+            else if (ch==='\r'){ /* ignore */ }
+            else { cur+=ch; }
+          }
+        }
+        row.push(cur); rows.push(row);
+        return rows;
+      }
+
+      function renderRekap(d){
+        const cards = document.getElementById('rekap-cards');
+        if (!cards) return;
+        cards.innerHTML = `
+          ${r_createCard("Total Paket", r_fmtInt(d.totalPaket))}
+          ${r_createCard("Total Anggaran", r_fmtIDR(d.totalAnggaran))}
+          ${r_createCard("Selesai", r_fmtInt(d.selesai), r_fmtPct(d.pctPaketSelesai), d.pctPaketSelesai, "green")}
+          ${r_createCard("Nilai Kontrak (Selesai)", r_fmtIDR(d.nilaiKontrakSelesai), r_fmtPct(d.pctNilaiKontrakSelesai), d.pctNilaiKontrakSelesai, "teal")}
+          ${r_createCard("Prognosis 30 Sept 2025", r_fmtIDR(d.prognosisSept), r_fmtPct(d.pctPrognosisSept), d.pctPrognosisSept, "cyan")}
+          ${r_createCard("Prognosis 31 Okt 2025", r_fmtIDR(d.prognosisOkt), r_fmtPct(d.pctPrognosisOkt), d.pctPrognosisOkt, "lime")}
+          ${r_createCard("Prognosis 30 Nov 2025", r_fmtIDR(d.prognosisNov), r_fmtPct(d.pctPrognosisNov), d.pctPrognosisNov, "green")}
+          ${r_createCard("Nilai Kontrak (Berkontrak)", r_fmtIDR(d.nilaiKontrakBerkontrak))}
+        `;
+
+        const ctx = document.getElementById('prognosisChartTop')?.getContext('2d');
+        if (!ctx) return;
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ["30 Sept 2025","31 Okt 2025","30 Nov 2025"],
+            datasets: [{
+              label: 'Nilai Prognosis',
+              data: [d.prognosisSept,d.prognosisOkt,d.prognosisNov],
+              borderColor: '#14b8a6',
+              backgroundColor: 'rgba(20,184,166,0.15)',
+              borderWidth: 3,
+              pointBackgroundColor: '#0d9488',
+              pointRadius: 6,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#0f766e' } } },
+            scales: {
+              x: { ticks: { color: '#0f766e' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+              y: { ticks: { color: '#0f766e', callback: v => r_fmtIDR(v) }, grid: { color: 'rgba(0,0,0,0.05)' } }
             }
+          }
+        });
+      }
 
-            const tr = document.createElement("tr");
-            cells.forEach((cell, idx) => {
-              const hLower = (header[idx] || "").toLowerCase();
-              const td = document.createElement("td");
-              td.className = "px-3 py-2 border text-gray-700 align-middle";
+      function toNum(s){ return parseFloat(String(s).replace(/\./g,"").replace(/,/g,".")) || 0; }
 
-              if (hLower.includes("persentase")) {
-                const formatted = formatPercent(cell);
-                td.textContent = formatted;
-                td.classList.add("text-right", "table-cell-nowrap");
+      async function fetchRekap(){
+        try{
+          const res = await fetch(safeURL(CSV_REKAP_URL));
+          const text = await res.text();
+          const rows = parseCSV2(text.trim());
+          // Asumsi baris ke-2 (index 1) berisi nilai ringkasan rekap dinas A–P (16 kolom)
+          const r = rows[1] || [];
 
-                let n = toNumber(cell);
-                let percentVal = NaN;
-                if (!isNaN(n)) {
-                  percentVal = (n <= 1) ? n * 100 : n;
-                } else {
-                  const numericPart = String(formatted).replace("%", "");
-                  const m = toNumber(numericPart);
-                  if (!isNaN(m)) percentVal = m;
-                }
+          const totalPaket             = toNum(r[0]);
+          const totalAnggaran          = toNum(r[1]);
+          const nilaiKontrakBerkontrak = toNum(r[10]);
+          const selesai                = toNum(r[11]);
+          const nilaiKontrakSelesai    = toNum(r[12]);
+          const prognosisSept          = toNum(r[13]);
+          const prognosisOkt           = toNum(r[14]);
+          const prognosisNov           = toNum(r[15]);
 
-                if (!isNaN(percentVal)) {
-                  if (percentVal > 80) td.classList.add("pct-high");
-                  else if (percentVal < 50) td.classList.add("pct-low");
-                  else td.classList.add("pct-medium");
-                }
-              }
-              else if (hLower.includes("pagu") || hLower.includes("nilai kontrak") || hLower.includes("anggaran")) {
-                td.textContent = formatRupiah(cell);
-                td.classList.add("text-right", "table-cell-nowrap");
-              }
-              else if (!isNaN(toNumber(cell)) && String(cell).trim() !== "") {
-                td.textContent = cell;
-                td.classList.add("text-right");
-              } else {
-                td.textContent = cell;
-              }
-              tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
+          renderRekap({
+            totalPaket,
+            totalAnggaran,
+            nilaiKontrakBerkontrak,
+            selesai,
+            nilaiKontrakSelesai,
+            prognosisSept,
+            prognosisOkt,
+            prognosisNov,
+            pctPaketSelesai: totalPaket>0 ? (selesai/totalPaket*100) : 0,
+            pctNilaiKontrakSelesai: totalAnggaran>0 ? (nilaiKontrakSelesai/totalAnggaran*100) : 0,
+            pctPrognosisSept: totalAnggaran>0 ? (prognosisSept/totalAnggaran*100) : 0,
+            pctPrognosisOkt: totalAnggaran>0 ? (prognosisOkt/totalAnggaran*100) : 0,
+            pctPrognosisNov: totalAnggaran>0 ? (prognosisNov/totalAnggaran*100) : 0
           });
-
-        } catch (err) {
-          console.error("Gagal memuat data:", err);
+        } catch(e){
+          console.error("Gagal memuat rekap dinas:", e);
         }
       }
 
-      loadTableData();
-      setInterval(loadTableData, 10000);
-    </script>
-  <script>
-  // Buat efek hujan di header
- <!-- Efek hujan -->
-  <script>
-    const rainContainer = document.getElementById("rain-container");
-    function createRaindrop() {
-      const drop = document.createElement("div");
-      drop.className = "raindrop";
-      drop.style.left = Math.random() * window.innerWidth + "px";
-      drop.style.animationDuration = (1 + Math.random() * 1.5) + "s";
-      drop.style.opacity = Math.random() * 0.7 + 0.3;
-      rainContainer.appendChild(drop);
-      setTimeout(() => drop.remove(), 2500);
-    }
-    setInterval(createRaindrop, 1520);
+      document.addEventListener('DOMContentLoaded', fetchRekap);
+    })();
   </script>
 
-  <!-- Script Dashboard Progress -->
+  <!-- Dashboard Progress -->
   <script>
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1875135079&single=true&output=csv";
 
-    async function fetchData() {
-      const res = await fetch(csvUrl);
-      const text = await res.text();
-      const rows = text.trim().split("\n").map(r => r.split(","));
-      renderDashboard(rows.slice(1));
+    // parser CSV (sudah ada parseCSV di atas), di sini tetap gunakan yang sama
+
+    // ✅ tampilkan angka apa adanya dari CSV, hanya ditambah Rp
+    function formatRupiahCSV(val){
+      if (val == null) return "-";
+      let s = String(val).trim();
+      if (!s) return "-";
+      if (/^rp/i.test(s)) return s; // jika sudah ada Rp
+      return "Rp " + s;
     }
 
-    function renderDashboard(data) {
+    function renderDashboard(data){
       const container = document.getElementById("dashboard");
       container.innerHTML = "";
 
       data.forEach(row => {
-        const unit = row[0];
+        const unit = sanitizeText(row[0]);
         if (!unit) return;
 
-        const jumlah = parseInt(row[1]) || 0;
-        const pagu = parseFloat(row[2]) || 0;
-        const persiapan = parseInt(row[3]) || 0;
-        const nilaiPersiapan = parseFloat(row[4]) || 0;
-        const berkontrak = parseInt(row[5]) || 0;
-        const nilaiBerkontrak = parseFloat(row[6]) || 0;
-        const selesai = parseInt(row[7]) || 0;
-        const nilaiSelesai = parseFloat(row[8]) || 0;
+        const jumlah          = row[1] || "0";
+        const pagu            = row[2] || "0";
+        const persiapan       = row[3] || "0";
+        const nilaiPersiapan  = row[4] || "0";
+        const berkontrak      = row[5] || "0";
+        const nilaiBerkontrak = row[6] || "0";
+        const selesai         = row[7] || "0";
+        const nilaiSelesai    = row[8] || "0";
 
-        if (jumlah === 0 && pagu === 0) return;
+        if (String(jumlah).trim()==="0" && String(pagu).trim()==="0") return;
 
-        const persiapanPct = ((persiapan / jumlah) * 100).toFixed(1);
-        const berkontrakPct = ((berkontrak / jumlah) * 100).toFixed(1);
-        const selesaiPct = ((selesai / jumlah) * 100).toFixed(1);
-        const paguPersiapanPct = ((nilaiPersiapan / pagu) * 100).toFixed(1);
-        const paguBerkontrakPct = ((nilaiBerkontrak / pagu) * 100).toFixed(1);
-        const paguSelesaiPct = ((nilaiSelesai / pagu) * 100).toFixed(1);
+        function toNum(v){ 
+          let s=String(v).replace(/\./g,"").replace(/,/g,"."); 
+          return parseFloat(s)||0; 
+        }
+        const jml = toNum(jumlah);
+        const pg  = toNum(pagu);
+        const ps  = toNum(persiapan);
+        const nb  = toNum(berkontrak);
+        const ns  = toNum(selesai);
+        const npv = toNum(nilaiPersiapan);
+        const nbv = toNum(nilaiBerkontrak);
+        const nsv = toNum(nilaiSelesai);
+
+        const persiapanPct      = jml ? ((ps / jml) * 100).toFixed(1) : "0";
+        const berkontrakPct     = jml ? ((nb / jml) * 100).toFixed(1) : "0";
+        const selesaiPct        = jml ? ((ns / jml) * 100).toFixed(1) : "0";
+        const paguPersiapanPct  = pg  ? ((npv / pg) * 100).toFixed(1) : "0";
+        const paguBerkontrakPct = pg  ? ((nbv / pg) * 100).toFixed(1) : "0";
+        const paguSelesaiPct    = pg  ? ((nsv / pg) * 100).toFixed(1) : "0";
 
         const card = document.createElement("div");
         card.className = "bg-white shadow-lg rounded-xl p-6 w-full";
 
-        card.innerHTML = `
-          <h2 class="text-2xl font-bold text-indigo-600 mb-2">${unit}</h2>
-          <p class="text-sm text-gray-600 mb-4">
-            Jumlah Total Paket: <span class="font-semibold">${jumlah}</span>
-          </p>
+        const h2 = document.createElement("h2");
+        h2.className = "text-2xl font-bold text-indigo-600 mb-2";
+        setText(h2, unit);
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="p-4 rounded-lg border bg-indigo-50">
-              <h3 class="font-semibold text-lg mb-2">Persiapan</h3>
-              <p class="text-2xl font-bold text-indigo-700">${persiapan}</p>
-              <p class="text-gray-600">(${persiapanPct}% paket)</p>
-              <p class="text-sm text-gray-500 mb-3">${formatRupiah(nilaiPersiapan)} (${paguPersiapanPct}% pagu)</p>
-            </div>
+        const p1 = document.createElement("p");
+        p1.className = "text-sm text-gray-600";
+        p1.innerHTML = `Jumlah Total Paket: <span class="font-semibold">${escapeHTML(jumlah)}</span>`;
 
-            <div class="p-4 rounded-lg border bg-green-50">
-              <h3 class="font-semibold text-lg mb-2">Berkontrak</h3>
-              <p class="text-2xl font-bold text-green-700">${berkontrak}</p>
-              <p class="text-gray-600">(${berkontrakPct}% paket)</p>
-              <p class="text-sm text-gray-500 mb-3">${formatRupiah(nilaiBerkontrak)} (${paguBerkontrakPct}% pagu)</p>
-            </div>
+        const p2 = document.createElement("p");
+        p2.className = "text-sm text-gray-600 mb-4";
+        p2.innerHTML = `Total Pagu Anggaran: <span class="font-semibold">${escapeHTML(formatRupiahCSV(pagu))}</span>`;
 
-            <div class="p-4 rounded-lg border bg-blue-50">
-              <h3 class="font-semibold text-lg mb-2">Selesai</h3>
-              <p class="text-2xl font-bold text-blue-700">${selesai}</p>
-              <p class="text-gray-600">(${selesaiPct}% paket)</p>
-              <p class="text-sm text-gray-500 mb-3">${formatRupiah(nilaiSelesai)} (${paguSelesaiPct}% pagu)</p>
-            </div>
-          </div>
+        const grid = document.createElement("div");
+        grid.className = "grid grid-cols-1 md:grid-cols-3 gap-6";
+
+        const b1 = document.createElement("div");
+        b1.className = "p-4 rounded-lg border bg-indigo-50";
+        b1.innerHTML = `
+          <h3 class="font-semibold text-lg mb-2">Persiapan</h3>
+          <p class="text-2xl font-bold text-indigo-700">${persiapan}</p>
+          <p class="text-gray-600">(${persiapanPct}% paket)</p>
+          <p class="text-sm text-gray-500 mb-3">${formatRupiahCSV(nilaiPersiapan)} (${paguPersiapanPct}% pagu)</p>
         `;
+
+        const b2 = document.createElement("div");
+        b2.className = "p-4 rounded-lg border bg-green-50";
+        b2.innerHTML = `
+          <h3 class="font-semibold text-lg mb-2">Berkontrak</h3>
+          <p class="text-2xl font-bold text-green-700">${berkontrak}</p>
+          <p class="text-gray-600">(${berkontrakPct}% paket)</p>
+          <p class="text-sm text-gray-500 mb-3">${formatRupiahCSV(nilaiBerkontrak)} (${paguBerkontrakPct}% pagu)</p>
+        `;
+
+        const b3 = document.createElement("div");
+        b3.className = "p-4 rounded-lg border bg-blue-50";
+        b3.innerHTML = `
+          <h3 class="font-semibold text-lg mb-2">Selesai</h3>
+          <p class="text-2xl font-bold text-blue-700">${selesai}</p>
+          <p class="text-gray-600">(${selesaiPct}% paket)</p>
+          <p class="text-sm text-gray-500 mb-3">${formatRupiahCSV(nilaiSelesai)} (${paguSelesaiPct}% pagu)</p>
+        `;
+
+        grid.append(b1,b2,b3);
+        card.append(h2,p1,p2,grid);
         container.appendChild(card);
       });
     }
 
-    function formatRupiah(num) {
-      return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(num);
+    async function fetchData(){
+      const res  = await fetch(safeURL(csvUrl));
+      const text = await res.text();
+      const rows = parseCSV(text.trim());
+      renderDashboard(rows.slice(1)); // buang header
     }
 
-    fetchData();
+    document.addEventListener('DOMContentLoaded', fetchData);
   </script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
