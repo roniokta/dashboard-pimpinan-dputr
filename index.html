@@ -14,80 +14,101 @@
   <!-- Animate.css CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
-  <!-- Chart.js -->
+  <!-- Chart.js for line chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root { --card-w: 240px; --card-h: 160px; }
     body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
 
-    /* 🔹 Header background gradient animasi */
-    .header-bg {
-      background: linear-gradient(-45deg, #2563eb, #4338ca, #3b82f6, #6366f1);
-      background-size: 400% 400%;
-      animation: gradientShift 18s ease infinite;
-      height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+   /* 🔹 Header background dengan animasi gradient biru-ungu */
+.header-bg { 
+  background: linear-gradient(-45deg, #2563eb, #4338ca, #3b82f6, #6366f1); 
+  background-size: 400% 400%;
+  animation: gradientShift 18s ease infinite;
+  height: 100vh; 
+  position: relative; 
+  overflow: hidden; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
     .wave { position: absolute; bottom: -1px; left: 0; width: 200%; height: 120px; background: url('https://svgshare.com/i/uUu.svg') repeat-x; background-size: 50% 120px; animation: waveMove 8s linear infinite; opacity: 0.9; z-index: 5; }
     @keyframes waveMove { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* 🔹 Kartu menu */
-    .dashboard-card {
-      width: var(--card-w); height: var(--card-h);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 1rem; border-radius: 18px;
-      background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden;
-    }
+    .dashboard-card { width: var(--card-w); height: var(--card-h); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; border-radius: 18px; cursor: pointer; user-select: none; background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%); box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden; }
+    .dashboard-card::before { content: ""; position: absolute; inset: 0; border-radius: 18px; background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(168,85,247,0.15)); opacity: 0; transition: opacity 0.3s ease; }
+    .dashboard-card:hover::before { opacity: 1; }
     .dashboard-card:hover { transform: translateY(-6px) scale(1.04); box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
-    .dashboard-card .card-img { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25)); transition: transform 0.3s ease; }
-    .dashboard-card:hover .card-img { transform: scale(1.1) rotate(3deg); }
-
+    .dashboard-card:active { transform: scale(0.97); }
+    .dashboard-card .card-img { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25)); transition: transform 0.3s ease, filter 0.3s ease; position: relative; z-index: 1; }
+    .dashboard-card:hover .card-img { transform: scale(1.15) rotate(3deg); filter: drop-shadow(0 0 12px rgba(59,130,246,0.5)); }
+    .dashboard-card .card-text { font-weight: 700; color: #1f2937; font-size: 1rem; margin-top: 0.5rem; position: relative; z-index: 1; }
   </style>
 
-  <!-- Helper sanitasi -->
+  <!-- Helper Sanitasi -->
   <script>
-    const ALLOWED_URL_RE=/^(https?:|mailto:|tel:)/i;
-    function sanitizeText(v,max=5000){if(v==null)return'';v=String(v).replace(/[\u0000-\u001F\u007F]/g,'');v=v.replace(/<\s*\/?\s*script\b[^>]*>/gi,'');if(/^[=+\-@]/.test(v))v="'"+v;return v.trim().slice(0,max);}
-    function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
-    function safeURL(u){const s=String(u||'').trim();return ALLOWED_URL_RE.test(s)?s:'#';}
-    function setText(el,v){el.textContent=sanitizeText(v);}
+    const ALLOWED_URL_RE = /^(https?:|mailto:|tel:)/i;
+    function sanitizeText(v, max = 5000) {
+      if (v == null) return '';
+      v = String(v);
+      v = v.replace(/[\u0000-\u001F\u007F]/g, '');
+      v = v.replace(/<\s*\/?\s*script\b[^>]*>/gi, '');
+      v = v.replace(/\bjavascript\s*:/gi, '');
+      if (/^[=+\-@]/.test(v)) v = "'" + v;
+      return v.trim().slice(0, max);
+    }
+    function escapeHTML(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    }
+    function safeURL(u) {
+      const s = String(u || '').trim();
+      return ALLOWED_URL_RE.test(s) ? s : '#';
+    }
+    function setText(el, v) { el.textContent = sanitizeText(v); }
   </script>
 </head>
 
 <body class="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 min-h-screen flex flex-col items-center justify-start">
 
-  <!-- HEADER -->
+  <!-- Header -->
   <div class="header-bg w-full relative">
-    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="absolute inset-0 bg-black/30 z-0"></div>
+    <div id="rain-container"></div>
+
     <div class="relative flex flex-col lg:flex-row items-center justify-center gap-6 px-6 text-center lg:text-left z-10">
       <div class="flex flex-col items-center lg:items-start animate__animated animate__fadeInLeft">
-        <img src="assets/kepala-dinas.jpg" alt="Kepala Dinas" class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-white shadow-xl bg-white object-contain"/>
+        <img src="assets/kepala-dinas.jpg" alt="Kepala Dinas" class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-white shadow-xl object-contain bg-white"/>
         <p class="mt-3 text-lg md:text-2xl font-bold text-white drop-shadow-lg border-b-2 border-white pb-1">
           Dr. Ir. H. Zeis Zultaqawa, M.M., IPU, ASEAN ENG.
         </p>
         <p class="text-sm md:text-lg text-white drop-shadow-lg mt-1">Kepala Dinas</p>
       </div>
+
       <h1 class="max-w-[700px] text-2xl md:text-5xl font-extrabold text-white drop-shadow-lg leading-snug animate__animated animate__fadeInDown">
-        DASHBOARD PROGRES KEGIATAN<br class="hidden md:block">DPUTR KABUPATEN BANDUNG
+        DASHBOARD PROGRES KEGIATAN <br class="hidden md:block"> DPUTR KABUPATEN BANDUNG
       </h1>
     </div>
     <div class="wave"></div>
   </div>
 
-  <!-- REKAP DINAS + CHART -->
+  <!-- ====== (BARU) RINGKASAN REKAP DINAS + CHART (gid=1853757195) ====== -->
   <div class="w-full max-w-7xl px-4 sm:px-6 -mt-10 mb-10">
     <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-6">
       <h2 class="text-xl md:text-2xl font-bold text-teal-700 mb-6 text-center">📊 Rekap Dinas & Tren Prognosis (Sept–Nov 2025)</h2>
+
+      <!-- Cards ringkasan -->
       <div id="rekap-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10"></div>
+
+      <!-- Line chart -->
       <div class="bg-white/80 rounded-2xl shadow p-4">
         <h3 class="text-center text-teal-700 font-semibold mb-3">📈 Tren Prognosis</h3>
         <canvas id="prognosisChartTop"></canvas>
@@ -95,80 +116,392 @@
     </div>
   </div>
 
-  <!-- DASHBOARD PROGRES -->
+  <!-- Dashboard Progress -->
   <div class="w-full max-w-[1500px] xl:max-w-[1600px] px-4 sm:px-6 mt-6 mb-6">
     <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">📊 Progres Kegiatan Per Unit Kerja DPUTR TA 2025</h2>
     <div id="dashboard" class="space-y-10"></div>
   </div>
 
-  <!-- ====== SCRIPT REKAP DINAS ====== -->
+  <!-- Grid cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 px-4 sm:px-6 w-full max-w-[1500px] xl:max-w-[1600px] mb-10 justify-items-center">
+    <a href="https://sites.google.com/view/bidang-jalan/progres-pekerjaan-bidang-jalan" class="dashboard-card animate__animated animate__fadeInUp delay-1" aria-label="Bidang Jalan">
+      <img src="https://img.icons8.com/color/80/road.png" alt="Bidang Jalan" class="card-img mb-2" />
+      <span class="card-text">BIDANG JALAN</span>
+    </a>
+    <a href="https://sites.google.com/view/aplikasi-sipedas-drainase/home/progres-kegiatan-fisik-drainase?authuser=0" class="dashboard-card animate__animated animate__fadeInUp delay-2" aria-label="Bidang Drainase">
+      <img src="https://img.icons8.com/color/80/water.png" alt="Bidang Drainase" class="card-img mb-2" />
+      <span class="card-text">BIDANG DRAINASE</span>
+    </a>
+    <a href="https://sites.google.com/view/tata-ruang/progres-pekerjaan-bidang-tata-ruang" class="dashboard-card animate__animated animate__fadeInUp delay-3" aria-label="Bidang Tata Ruang">
+      <img src="https://img.icons8.com/color/80/city-buildings.png" alt="Bidang Tata Ruang" class="card-img mb-2" />
+      <span class="card-text">BIDANG TATA RUANG</span>
+    </a>
+    <a href="https://sites.google.com/view/bangunan-gedung/progres-pekerjaan-bangunan-gedung" class="dashboard-card animate__animated animate__fadeInUp delay-4" aria-label="Bidang Bangunan Gedung">
+      <img src="https://img.icons8.com/color/80/home.png" alt="Bidang Bangunan Gedung" class="card-img mb-2" />
+      <span class="card-text">BIDANG BANGUNAN GEDUNG</span>
+    </a>
+    <a href="https://sites.google.com/view/bidang-sda/progres-pekerjaan-bidang-sda" class="dashboard-card animate__animated animate__fadeInUp delay-5" aria-label="Bidang SDA">
+      <img src="https://img.icons8.com/color/80/engineering.png" alt="Bidang SDA" class="card-img mb-2" />
+      <span class="card-text">BIDANG SDA</span>
+    </a>
+    <a href="https://sites.google.com/view/jas-konstruksi/progres-pekerjaan-jasa-konstruksi" class="dashboard-card animate__animated animate__fadeInUp delay-6" aria-label="Bidang Jasa Konstruksi">
+      <img src="https://img.icons8.com/color/80/crane.png" alt="Bidang Jasa Konstruksi" class="card-img mb-2" />
+      <span class="card-text">BIDANG JASA KONSTRUKSI</span>
+    </a>
+    <a href="https://sites.google.com/view/jual-sampah/home/monitoring-pengumpulan-hdpe?authuser=0" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="HDPE">
+      <img src="https://img.icons8.com/color/80/recycling.png" alt="HDPE Recycling" class="card-img mb-2" />
+      <span class="card-text">HDPE</span>
+    </a>
+    <a href="https://sites.google.com/view/datadisposisipermohonankrk/dashboard" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="KRK">
+      <img src="https://img.icons8.com/color/80/document.png" alt="Dokumen KRK" class="card-img mb-2" />
+      <span class="card-text">KRK,PMP UMK & RENCANA TAPAK</span>
+    </a>
+    <a href="https://sites.google.com/view/potensidiluarsistem/potensi-diluar-sistem" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="Potensi Luar Sistem">
+      <img src="https://img.icons8.com/color/80/money-bag.png" alt="Potensi Luar Sistem" class="card-img mb-2" />
+      <span class="card-text">Potensi Diluar Sistem</span>
+    </a>
+     <a href="https://sites.google.com/view/informasi-persampahan/peta-sebaran-tps3r-dan-dgn" 
+   class="dashboard-card animate__animated animate__fadeInUp delay-7" 
+   aria-label="Informasi Persampahan">
+  <img src="https://img.icons8.com/color/80/trash.png" 
+       alt="Informasi Persampahan" 
+       class="card-img mb-2" />
+  <span class="card-text">Informasi Persampahan</span>
+</a>
+
+<a href="https://sites.google.com/view/informasi-banjir-dan-genangan/titik-banjir-dan-genangan"
+   class="dashboard-card animate__animated animate__fadeInUp delay-7"
+   aria-label="Informasi Banjir dan Genangan">
+  <img src="https://img.icons8.com/color/80/floods.png"
+       alt="Informasi Banjir dan Genangan"
+       class="card-img mb-2" />
+  <span class="card-text">Informasi Banjir dan Genangan</span>
+</a>
+    
+    <a href="https://sites.google.com/view/program-prioritas/lokasi-prioritas?authuser=0" 
+   class="dashboard-card animate__animated animate__fadeInUp delay-7" 
+   aria-label="Lokasi Prioritas Pembangunan">
+  <img src="https://img.icons8.com/color/80/marker.png" 
+       alt="Lokasi Prioritas Pembangunan" 
+       class="card-img mb-2" />
+  <span class="card-text">Lokasi Prioritas</span>
+</a>
+
+     <a href="https://pemberdayaan.go.id/pages/inpres" 
+   class="dashboard-card animate__animated animate__fadeInUp delay-7" 
+   aria-label="Dashboard Agregat Data Tunggal Sosial Ekonomi Nasional (DTSEN)">
+  <img src="https://img.icons8.com/color/80/combo-chart--v1.png" 
+       alt="Dashboard DTSEN" 
+       class="card-img mb-2" />
+  <span class="card-text">Dashboard Agregat Data Tunggal Sosial Ekonomi Nasional (DTSEN)</span>
+</a>
+
+
+    
+    <a href="https://sites.google.com/view/tanya-saya/tanya-ai" class="dashboard-card animate__animated animate__fadeInUp delay-7" aria-label="Tanya AI">
+      <img src="https://img.icons8.com/color/80/artificial-intelligence.png" alt="Tanya AI" class="card-img mb-2" />
+      <span class="card-text">Tanya AI</span>
+    </a>
+  </div>
+
+  <!-- Data tabel dari Sheet (opsional): aman karena textContent -->
   <script>
-    (function(){
-      const CSV_REKAP_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1853757195&single=true&output=csv";
-      const fIDR=n=>isNaN(n)?'-':new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n);
-      const fInt=n=>isNaN(n)?'-':new Intl.NumberFormat('id-ID').format(n);
-      const fPct=n=>isNaN(n)?'-':`${(+n).toFixed(2)}%`;
-      const toNum=s=>parseFloat(String(s||'').replace(/\./g,'').replace(/,/g,'.'))||0;
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQfPFj1SxjErXTz4pwoIioVXnA90uqCEjPBDPhnNi6y9j5yPv59-LWTwNlCdg4mNtDgMkktWjt2mWM/pub?gid=0&single=true&output=csv";
+    function toNumber(val){ if (val==null) return NaN; const n=String(val).replace(/[^\d.-]/g,""); return n?Number(n):NaN; }
+    function formatRupiah(v){ const n=toNumber(v); if (isNaN(n)) return String(v??''); return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",minimumFractionDigits:0}).format(n); }
+    function formatPercent(v){ if (v==null) return "-"; const s=String(v).trim(); if (s.endsWith("%")) return sanitizeText(s); let n=toNumber(s); if (isNaN(n)) return sanitizeText(v); if (n<=1) n*=100; return n.toFixed(2)+"%"; }
 
-      function card(title,main,sub,prog,color="teal"){
-        const bar=color==="green"?"bg-green-500":color==="cyan"?"bg-cyan-500":color==="lime"?"bg-lime-500":"bg-teal-500";
-        const hasProg=prog!==undefined&&!isNaN(prog);
-        return `<div class="bg-white/90 border border-teal-100 p-4 rounded-2xl shadow text-center">
-          <h2 class="text-sm font-semibold mb-2 text-gray-600">${title}</h2>
-          <p class="text-xl font-bold text-teal-700">${main}</p>
-          ${sub?`<p class="mt-1 text-sm text-gray-500">${sub}</p>`:''}
-          ${hasProg?`<div class="w-full bg-gray-200 rounded-full h-2 mt-2"><div class="${bar} h-2 rounded-full" style="width:${prog}%;"></div></div>`:''}
-        </div>`;
+    // Parser CSV sederhana dengan dukungan kutip
+    function parseCSV(text){
+      const rows=[]; let cur="", row=[], inQ=false;
+      for (let i=0;i<text.length;i++){
+        const ch=text[i], nch=text[i+1];
+        if (inQ){
+          if (ch==='"' && nch==='"'){ cur+='"'; i++; }
+          else if (ch==='"'){ inQ=false; }
+          else { cur+=ch; }
+        } else {
+          if (ch==='"'){ inQ=true; }
+          else if (ch===','){ row.push(cur); cur=""; }
+          else if (ch==='\n'){ row.push(cur); rows.push(row); row=[]; cur=""; }
+          else if (ch==='\r'){ /* ignore */ }
+          else { cur+=ch; }
+        }
       }
+      row.push(cur); rows.push(row);
+      return rows;
+    }
 
-      function parseCSV(text){const rows=[];let cur="",row=[],inQ=false;for(let i=0;i<text.length;i++){const ch=text[i],n=text[i+1];if(inQ){if(ch==='"'&&n==='"'){cur+='"';i++;}else if(ch==='"'){inQ=false;}else cur+=ch;}else{if(ch==='"'){inQ=true;}else if(ch===','){row.push(cur);cur="";}else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur="";}else if(ch!=='\r'){cur+=ch;}}}row.push(cur);rows.push(row);return rows;}
+    async function loadTableData(){
+      try{
+        const res = await fetch(safeURL(sheetUrl));
+        const text = await res.text();
+        const rows = parseCSV(text.trim());
+        if (!rows || !rows.length) return;
 
-      function render(d){
-        const wrap=document.getElementById('rekap-cards');
-        wrap.innerHTML=`
-          ${card("Total Paket",fInt(d.totalPaket))}
-          ${card("Total Anggaran",fIDR(d.totalAnggaran))}
-          ${card("Selesai",fInt(d.selesai),fPct(d.pctPaketSelesai),d.pctPaketSelesai,"green")}
-          ${card("Nilai Kontrak (selesai)",fIDR(d.nilaiKontrakSelesai),fPct(d.pctNilaiKontrakSelesai),d.pctNilaiKontrakSelesai,"teal")}
-          ${card("Prognosis 30 Sept 2025",fIDR(d.prognosisSept),fPct(d.pctPrognosisSept),d.pctPrognosisSept,"cyan")}
-          ${card("Prognosis 30 Nov 2025",fIDR(d.prognosisNov),fPct(d.pctPrognosisNov),d.pctPrognosisNov,"green")}
-        `;
-        const ctx=document.getElementById('prognosisChartTop')?.getContext('2d');
-        if(!ctx)return;
-        new Chart(ctx,{type:'line',data:{labels:["30 Sept","31 Okt","30 Nov"],datasets:[{label:'Nilai Prognosis',data:[d.prognosisSept,d.prognosisOkt,d.prognosisNov],borderColor:'#14b8a6',backgroundColor:'rgba(20,184,166,0.15)',borderWidth:3,pointBackgroundColor:'#0d9488',pointRadius:6,tension:0.3}]},options:{responsive:true,plugins:{legend:{labels:{color:'#0f766e'}}},scales:{x:{ticks:{color:'#0f766e'}},y:{ticks:{color:'#0f766e',callback:v=>fIDR(v)}}}}});
-      }
+        let header = rows[0].map(h => sanitizeText(h.trim()));
+        const bodyRows = rows.slice(1);
 
-      async function fetchRekap(){
-        const res=await fetch(CSV_REKAP_URL);const text=await res.text();const rows=parseCSV(text.trim());
-        const d=rows[1]||[];
-        const totalPaket=toNum(d[0]),totalAnggaran=toNum(d[1]),selesai=toNum(d[11]),nilaiKontrakSelesai=toNum(d[12]),prognosisSept=toNum(d[13]),prognosisOkt=toNum(d[14]),prognosisNov=toNum(d[15]);
-        render({totalPaket,totalAnggaran,selesai,nilaiKontrakSelesai,prognosisSept,prognosisOkt,prognosisNov,pctPaketSelesai:totalPaket?(selesai/totalPaket*100):0,pctNilaiKontrakSelesai:totalAnggaran?(nilaiKontrakSelesai/totalAnggaran*100):0,pctPrognosisSept:totalAnggaran?(prognosisSept/totalAnggaran*100):0,pctPrognosisNov:totalAnggaran?(prognosisNov/totalAnggaran*100):0});
-      }
-      document.addEventListener('DOMContentLoaded',fetchRekap);
-    })();
+        const headerRow = document.getElementById("table-header");
+        const tbody     = document.getElementById("table-body");
+        if (!headerRow || !tbody) return; // jika memang tidak ada tabel di halaman ini
+
+        // indeks bantuan (opsional)
+        const idxPagu = header.findIndex(h => h.toLowerCase().includes("pagu"));
+        const idxKontrakAll = header.map((h,i)=>({h,i})).filter(({h})=>h.toLowerCase().includes("nilai kontrak")).map(({i})=>i);
+        const idxKontrak = idxKontrakAll.length ? idxKontrakAll[idxKontrakAll.length-1] : -1;
+
+        let idxPersenPagu = header.findIndex(h => h.toLowerCase().includes("persentase") && h.toLowerCase().includes("pagu"));
+        let addComputed = false;
+        if (idxPersenPagu === -1) { header.push("PERSENTASE TERHADAP PAGU"); idxPersenPagu = header.length-1; addComputed = true; }
+
+        headerRow.innerHTML = "";
+        header.forEach(h => {
+          const th=document.createElement("th");
+          th.className="px-3 py-2 border text-xs sm:text-sm md:text-base min-w-[140px] md:min-w-[180px]";
+          setText(th, h);
+          headerRow.appendChild(th);
+        });
+
+        tbody.innerHTML = "";
+        bodyRows.forEach(row => {
+          const cells = addComputed ? [...row] : row.slice();
+          if (addComputed) cells.push("");
+
+          if (idxPagu !== -1 && idxKontrak !== -1){
+            const paguVal = toNumber(cells[idxPagu]);
+            const kontrakVal = toNumber(cells[idxKontrak]);
+            const percent = (isFinite(paguVal) && paguVal>0 && isFinite(kontrakVal)) ? (kontrakVal/paguVal)*100 : NaN;
+            cells[idxPersenPagu] = isFinite(percent) ? percent.toFixed(2) + "%" : "-";
+          }
+
+          const tr=document.createElement("tr");
+          cells.forEach((cell, idx) => {
+            const hLower = (header[idx] || "").toLowerCase();
+            const td=document.createElement("td");
+            td.className="px-3 py-2 border text-gray-700 align-middle";
+            if (hLower.includes("persentase")) {
+              setText(td, formatPercent(cell)); td.classList.add("text-right");
+            } else if (hLower.includes("pagu") || hLower.includes("nilai kontrak") || hLower.includes("anggaran")) {
+              setText(td, formatRupiah(cell)); td.classList.add("text-right");
+            } else if (!isNaN(toNumber(cell)) && String(cell).trim()!=="") {
+              setText(td, cell); td.classList.add("text-right");
+            } else { setText(td, cell); }
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+
+      } catch(e){ console.error("Gagal memuat data:", e); }
+    }
   </script>
 
-  <!-- ====== SCRIPT DASHBOARD PER BIDANG ====== -->
+  <!-- ====== (BARU) SCRIPT REKAP DINAS TOP (gid=1853757195) ====== -->
+<script>
+  (function(){
+    const CSV_REKAP_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1853757195&single=true&output=csv";
+
+    // Formatter
+    const fIDR = n => isNaN(n) ? '-' :
+      new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n);
+    const fInt = n => isNaN(n) ? '-' : new Intl.NumberFormat('id-ID').format(n);
+    const fPct = n => isNaN(n) ? '-' : `${(+n).toFixed(2)}%`;
+    const toNum = s => parseFloat(String(s||'').replace(/\./g,'').replace(/,/g,'.')) || 0;
+
+    // Card
+    function card(title, main, sub, prog, color="teal"){
+      const bar =
+        color==="green" ? "bg-green-500" :
+        color==="cyan"  ? "bg-cyan-500"  :
+        color==="lime"  ? "bg-lime-500"  : "bg-teal-500";
+      const hasProg = prog !== undefined && !isNaN(prog);
+      return `
+        <div class="bg-white/90 border border-teal-100 p-4 rounded-2xl shadow hover:shadow-lg transition text-center">
+          <h2 class="text-sm font-semibold mb-2 text-gray-600">${title}</h2>
+          <p class="text-xl font-bold text-teal-700">${main}</p>
+          ${sub ? `<p class="mt-1 text-sm text-gray-500">${sub}</p>` : ``}
+          ${hasProg ? `
+            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+              <div class="${bar} h-2 rounded-full" style="width:${prog}%;"></div>
+            </div>` : ``}
+        </div>
+      `;
+    }
+
+    // Parser CSV lokal
+    function parseCSV(text){
+      const rows=[]; let cur="", row=[], inQ=false;
+      for (let i=0;i<text.length;i++){
+        const ch=text[i],n=text[i+1];
+        if(inQ){
+          if(ch==='"' && n==='"'){cur+='"';i++}
+          else if(ch==='"'){inQ=false}
+          else cur+=ch;
+        }else{
+          if(ch==='"'){inQ=true}
+          else if(ch===','){row.push(cur);cur=""}
+          else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur=""}
+          else if(ch!=='\r'){cur+=ch}
+        }
+      }
+      row.push(cur); rows.push(row);
+      return rows;
+    }
+
+    function render(d){
+      const wrap = document.getElementById('rekap-cards');
+      if(!wrap) return;
+
+      wrap.innerHTML = `
+        ${card("Total Paket", fInt(d.totalPaket))}
+        ${card("Total Anggaran", fIDR(d.totalAnggaran))}
+        ${card("Pekerjaan Fisik", fInt(d.pekerjaanFisik))}
+        ${card("Pagu Fisik", fIDR(d.paguFisik))}
+        ${card("Non Fisik", fInt(d.nonFisik))}
+        ${card("Pagu Non Fisik", fIDR(d.paguNonFisik))}
+        ${card("Belanja Umum", fIDR(d.belanjaUmum))}
+        ${card("Persiapan/Pengadaan", fInt(d.persiapanPengadaan))}
+        ${card("Pagu Pengadaan", fIDR(d.paguPengadaan))}
+        ${card("Berkontrak", fInt(d.berkontrak))}
+        ${card("Nilai Kontrak (Berkontrak)", fIDR(d.nilaiKontrakBerkontrak))}
+        ${card("Selesai", fInt(d.selesai), fPct(d.pctPaketSelesai), d.pctPaketSelesai, "green")}
+        ${card("Nilai Kontrak (selesai)", fIDR(d.nilaiKontrakSelesai), fPct(d.pctNilaiKontrakSelesai), d.pctNilaiKontrakSelesai, "teal")}
+        ${card("Prognosis 30 Sept 2025", fIDR(d.prognosisSept), fPct(d.pctPrognosisSept), d.pctPrognosisSept, "cyan")}
+        ${card("Prognosis 31 Okt 2025", fIDR(d.prognosisOkt), fPct(d.pctPrognosisOkt), d.pctPrognosisOkt, "lime")}
+        ${card("Prognosis 30 Nov 2025", fIDR(d.prognosisNov), fPct(d.pctPrognosisNov), d.pctPrognosisNov, "green")}
+      `;
+
+      const ctx = document.getElementById('prognosisChartTop')?.getContext('2d');
+      if(!ctx) return;
+      new Chart(ctx,{
+        type:'line',
+        data:{
+          labels:["30 Sept 2025","31 Okt 2025","30 Nov 2025"],
+          datasets:[{
+            label:'Nilai Prognosis',
+            data:[d.prognosisSept,d.prognosisOkt,d.prognosisNov],
+            borderColor:'#14b8a6',
+            backgroundColor:'rgba(20,184,166,0.15)',
+            borderWidth:3,
+            pointBackgroundColor:'#0d9488',
+            pointRadius:6,
+            tension:0.3
+          }]
+        },
+        options:{
+          responsive:true,
+          plugins:{ legend:{ labels:{ color:'#0f766e' } } },
+          scales:{
+            x:{ ticks:{ color:'#0f766e' }, grid:{ color:'rgba(0,0,0,0.05)' } },
+            y:{ ticks:{ color:'#0f766e', callback:v=>fIDR(v) }, grid:{ color:'rgba(0,0,0,0.05)' } }
+          }
+        }
+      });
+    }
+
+    async function fetchRekap(){
+      try{
+        const res = await fetch(CSV_REKAP_URL);
+        const text = await res.text();
+        const rows = parseCSV(text.trim());
+
+        // Ambil baris data pertama setelah header yang tidak kosong
+        const dataRow = (rows.slice(1).find(r => r.some(c => String(c).trim() !== "")) ) || rows[1] || [];
+
+        // Kolom A–P
+        const totalPaket             = toNum(dataRow[0]);
+        const totalAnggaran          = toNum(dataRow[1]);
+        const pekerjaanFisik         = toNum(dataRow[2]);
+        const paguFisik              = toNum(dataRow[3]);
+        const nonFisik               = toNum(dataRow[4]);
+        const paguNonFisik           = toNum(dataRow[5]);
+        const belanjaUmum            = toNum(dataRow[6]);
+        const persiapanPengadaan     = toNum(dataRow[7]);
+        const paguPengadaan          = toNum(dataRow[8]);
+        const berkontrak             = toNum(dataRow[9]);
+        const nilaiKontrakBerkontrak = toNum(dataRow[10]);
+        const selesai                = toNum(dataRow[11]);
+        const nilaiKontrakSelesai    = toNum(dataRow[12]);
+        const prognosisSept          = toNum(dataRow[13]);
+        const prognosisOkt           = toNum(dataRow[14]);
+        const prognosisNov           = toNum(dataRow[15]);
+
+        render({
+          totalPaket, totalAnggaran, pekerjaanFisik, paguFisik,
+          nonFisik, paguNonFisik, belanjaUmum, persiapanPengadaan,
+          paguPengadaan, berkontrak, nilaiKontrakBerkontrak,
+          selesai, nilaiKontrakSelesai, prognosisSept, prognosisOkt, prognosisNov,
+          pctPaketSelesai: totalPaket>0 ? (selesai/totalPaket*100) : 0,
+          pctNilaiKontrakSelesai: totalAnggaran>0 ? (nilaiKontrakSelesai/totalAnggaran*100) : 0,
+          pctPrognosisSept: totalAnggaran>0 ? (prognosisSept/totalAnggaran*100) : 0,
+          pctPrognosisOkt: totalAnggaran>0 ? (prognosisOkt/totalAnggaran*100) : 0,
+          pctPrognosisNov: totalAnggaran>0 ? (prognosisNov/totalAnggaran*100) : 0
+        });
+      }catch(e){
+        console.error("Gagal memuat rekap dinas:", e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchRekap);
+  })();
+</script>
+
+
+  <!-- Dashboard Progress -->
+  <!-- Dashboard Progress -->
   <script>
-    const csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1875135079&single=true&output=csv";
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvrgVrpTFMrG-NDpW9HUzpmSvFVOFH-k2o4C9cOp3XwC-EtJaiCL1T5Y4nBgLeaDw-gTJS8O3q1EHd/pub?gid=1875135079&single=true&output=csv";
 
-    function parseCSV(text){const rows=[];let cur="",row=[],inQ=false;for(let i=0;i<text.length;i++){const ch=text[i],n=text[i+1];if(inQ){if(ch==='"'&&n==='"'){cur+='"';i++;}else if(ch==='"'){inQ=false;}else cur+=ch;}else{if(ch==='"'){inQ=true;}else if(ch===','){row.push(cur);cur="";}else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur="";}else if(ch!=='\r'){cur+=ch;}}}row.push(cur);rows.push(row);return rows;}
+    // ✅ Parser CSV (pakai versi paling stabil)
+    function parseCSV(text){
+      const rows=[]; let cur="", row=[], inQ=false;
+      for(let i=0;i<text.length;i++){
+        const ch=text[i],n=text[i+1];
+        if(inQ){
+          if(ch==='"'&&n==='"'){cur+='"';i++;}
+          else if(ch==='"'){inQ=false;}
+          else cur+=ch;
+        }else{
+          if(ch==='"'){inQ=true;}
+          else if(ch===','){row.push(cur);cur="";}
+          else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur="";}
+          else if(ch!=='\r'){cur+=ch;}
+        }
+      }
+      row.push(cur);rows.push(row);
+      return rows;
+    }
 
-    // 🔧 fungsi toNum yang lebih kuat
-    function toNum(v){if(v==null)return 0;let s=String(v).trim();if(!s)return 0;s=s.replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',', '.');const n=parseFloat(s);return isNaN(n)?0:n;}
-    const persen=(a,b)=>b>0?Math.round((a/b)*1000)/10:0;
-    const rupiah=v=>"Rp "+toNum(v).toLocaleString('id-ID');
+    // ✅ Formatter & kalkulator aman
+    function toNum(v){
+      if(v==null) return 0;
+      let s=String(v).trim();
+      if(!s) return 0;
+      s=s.replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',', '.');
+      const n=parseFloat(s);
+      return isNaN(n)?0:n;
+    }
+    const persen = (a,b) => b>0 ? Math.round((a/b)*1000)/10 : 0;
+    const rupiah = v => "Rp " + toNum(v).toLocaleString('id-ID');
 
+    // ✅ Fungsi utama untuk render dashboard
     function renderDashboard(data){
       const container=document.getElementById("dashboard");
       container.innerHTML="";
       data.forEach(row=>{
-        const unit=sanitizeText(row[0]);if(!unit)return;
-        const jumlah=toNum(row[1]),pagu=toNum(row[2]),
-          persiapan=toNum(row[3]),nilaiPersiapan=toNum(row[4]),
-          berkontrak=toNum(row[5]),nilaiBerkontrak=toNum(row[6]),
-          selesai=toNum(row[7]),nilaiSelesai=toNum(row[8]);
+        const unit=sanitizeText(row[0]);
+        if(!unit) return;
 
+        const jumlah=toNum(row[1]),
+              pagu=toNum(row[2]),
+              persiapan=toNum(row[3]),
+              nilaiPersiapan=toNum(row[4]),
+              berkontrak=toNum(row[5]),
+              nilaiBerkontrak=toNum(row[6]),
+              selesai=toNum(row[7]),
+              nilaiSelesai=toNum(row[8]);
+
+        // Buat elemen kartu
         const card=document.createElement("div");
         card.className="bg-white shadow-lg rounded-xl p-6 w-full";
         card.innerHTML=`
@@ -176,38 +509,70 @@
           <p class="text-sm text-gray-600">Jumlah Total Paket: <span class="font-semibold">${jumlah}</span></p>
           <p class="text-sm text-gray-600 mb-4">Total Pagu Anggaran: <span class="font-semibold">${rupiah(pagu)}</span></p>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
             <div class="p-4 rounded-lg border bg-indigo-50">
               <h3 class="font-semibold text-lg mb-2">Persiapan</h3>
               <p class="text-2xl font-bold text-indigo-700">${persiapan}</p>
               <p class="text-gray-600">(${persen(persiapan,jumlah)}% paket)</p>
               <p class="text-sm text-gray-500">${rupiah(nilaiPersiapan)} (${persen(nilaiPersiapan,pagu)}% pagu)</p>
             </div>
+
             <div class="p-4 rounded-lg border bg-green-50">
               <h3 class="font-semibold text-lg mb-2">Berkontrak</h3>
               <p class="text-2xl font-bold text-green-700">${berkontrak}</p>
               <p class="text-gray-600">(${persen(berkontrak,jumlah)}% paket)</p>
               <p class="text-sm text-gray-500">${rupiah(nilaiBerkontrak)} (${persen(nilaiBerkontrak,pagu)}% pagu)</p>
             </div>
+
             <div class="p-4 rounded-lg border bg-blue-50">
               <h3 class="font-semibold text-lg mb-2">Selesai</h3>
               <p class="text-2xl font-bold text-blue-700">${selesai}</p>
               <p class="text-gray-600">(${persen(selesai,jumlah)}% paket)</p>
               <p class="text-sm text-gray-500">${rupiah(nilaiSelesai)} (${persen(nilaiSelesai,pagu)}% pagu)</p>
             </div>
+
           </div>`;
         container.appendChild(card);
       });
     }
 
-    async function fetchData(){const res=await fetch(safeURL(csvUrl));const text=await res.text();const rows=parseCSV(text.trim());renderDashboard(rows.slice(1));}
+    // ✅ Loader utama
+    async function fetchData(){
+      const res=await fetch(safeURL(csvUrl));
+      const text=await res.text();
+      const rows=parseCSV(text.trim());
+      renderDashboard(rows.slice(1));
+    }
+
     document.addEventListener('DOMContentLoaded',fetchData);
   </script>
 
-  <!-- FOOTER -->
-  <footer class="mt-12 w-full bg-black/40 backdrop-blur-sm py-4 shadow-inner text-white text-center">
-    © <span id="year"></span> Dinas Pekerjaan Umum dan Tata Ruang – Kabupaten Bandung
-  </footer>
-  <script>document.getElementById("year").textContent=new Date().getFullYear();</script>
+
+  <!-- Footer Dark -->
+<footer class="mt-12 w-full bg-black/40 backdrop-blur-sm py-4 shadow-inner animate__animated animate__fadeInUp">
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-3 text-white">
+    <!-- Logo instansi (bisa diganti sesuai kebutuhan) -->
+    <img src="assets/DPUTR HIJAU.png" class="h-10 w-10 object-contain"/>
+    <p class="text-sm font-medium text-center">
+      © <span id="year"></span> Dinas Pekerjaan Umum dan Tata Ruang – Kabupaten Bandung
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Update tahun otomatis
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
